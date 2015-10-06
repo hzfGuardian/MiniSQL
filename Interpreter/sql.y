@@ -39,8 +39,8 @@
 %%
 
 program:
-stmt TERMINATOR {ProcessTree($1);}
-|program stmt TERMINATOR {ProcessTree($2);}
+stmt TERMINATOR {ProcessTree($1);FreeTree($1);}
+|program stmt TERMINATOR {ProcessTree($2);FreeTree($2);}
 ;
 
 stmt:

@@ -1,15 +1,17 @@
 %{
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include "sql.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include "sql.h"
+
+extern "C" {
     
-    extern "C" {
-        
-        void yyerror(const char *s);
-        int yyparse();
-        extern int yylex(void);
-        extern int yylineno;
-    }
+    void yyerror(const char *s);
+    int yyparse();
+    extern int yylex(void);
+    extern int yylineno;
+}
 
 %}
 
@@ -25,6 +27,9 @@
 %token OPERATOR LBORDER RBORDER
 %token TERMINATOR
 %token NUMBER
+%token LBRACE RBRACE
+%token DP TABLE
+%token CT IDX
 
 %type<pNode> STMT
 %type<pNode> OP ST NSPLIT ST_LIST
@@ -33,20 +38,32 @@
 %type<pNode> OPERATOR LBORDER RBORDER
 %type<pNode> TERMINATOR
 %type<pNode> NUMBER
+%type<pNode> LBRACE RBRACE
+%type<pNode> DP TABLE
+%type<pNode> CT IDX
 
 %type<pNode> program stmt st_list fm_list wh_list name_list whname_list whname whvalue
+
 
 %%
 
 program:
 stmt TERMINATOR {ProcessTree($1);FreeTree($1);}
-|program stmt TERMINATOR {ProcessTree($2);FreeTree($2);}
+|stmt TERMINATOR program {ProcessTree($1);FreeTree($1);}
+
 ;
 
 stmt:
-st_list fm_list                                {$$ = NewFatherAddSon(STMT, $1, $2);}
+st_list fm_list                    {$$ = NewFatherAddSon(STMT, $1, $2);}
 |st_list fm_list wh_list           {$$ = NewFatherAddSon(STMT, $1, $2, $3);}
+
+|DP TABLE NAME                      {}
+
+|CT TABLE NAME LBRACE attr_list RBRACE  {}
 ;
+
+attr_list:
+
 
 st_list:
 ST name_list                    {$$ = NewFatherAddSon(ST_LIST, $1, $2);}
@@ -85,5 +102,3 @@ void yyerror(const char *s)
 {
     printf("Error: %s near line %d\n", s, yylineno);
 }
-
-

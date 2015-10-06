@@ -15,5 +15,6 @@ struct SqlNodeType* FatherAddSon(struct SqlNodeType* pFather, struct SqlNodeType
 struct SqlNodeType* NewFatherAddSon(int iType, struct SqlNodeType* pSon1);
 struct SqlNodeType* NewFatherAddSon(int iType, struct SqlNodeType* pSon1, struct SqlNodeType* pSon2);
 struct SqlNodeType* NewFatherAddSon(int iType, struct SqlNodeType* pSon1, struct SqlNodeType* pSon2, struct SqlNodeType* pSon3);
+void FreeTree(struct SqlNodeType* pNode);
 
 #endif

@@ -63,7 +63,19 @@ extern int yydebug;
     LBORDER = 273,
     RBORDER = 274,
     TERMINATOR = 275,
-    NUMBER = 276
+    NUMBER = 276,
+    INTEGER = 277,
+    LBRACE = 278,
+    RBRACE = 279,
+    DP = 280,
+    TABLE = 281,
+    CT = 282,
+    IDX = 283,
+    PRIMARY = 284,
+    KEY = 285,
+    INT = 286,
+    FLOAT = 287,
+    CHAR = 288
   };
 #endif
 
@@ -72,11 +84,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 17 "sql.y" /* yacc.c:1909  */
+#line 19 "sql.y" /* yacc.c:1909  */
 
     struct SqlNodeType* pNode;
 
-#line 80 "sql.tab.h" /* yacc.c:1909  */
+#line 92 "sql.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

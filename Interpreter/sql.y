@@ -26,10 +26,12 @@ extern "C" {
 %token WH WHSPLIT WH_LIST WHNAME_LIST WHNAME
 %token OPERATOR LBORDER RBORDER
 %token TERMINATOR
-%token NUMBER
+%token NUMBER INTEGER
 %token LBRACE RBRACE
 %token DP TABLE
 %token CT IDX
+%token PRIMARY KEY 
+%token INT FLOAT CHAR
 
 %type<pNode> STMT
 %type<pNode> OP ST NSPLIT ST_LIST
@@ -37,13 +39,15 @@ extern "C" {
 %type<pNode> WH WHSPLIT WH_LIST WHNAME_LIST WHNAME
 %type<pNode> OPERATOR LBORDER RBORDER
 %type<pNode> TERMINATOR
-%type<pNode> NUMBER
+%type<pNode> NUMBER INTEGER
 %type<pNode> LBRACE RBRACE
 %type<pNode> DP TABLE
 %type<pNode> CT IDX
+%type<pNode> PRIMARY KEY 
+%type<pNode> INT FLOAT CHAR
 
 %type<pNode> program stmt st_list fm_list wh_list name_list whname_list whname whvalue
-
+%type<pNode> attr_list data_type
 
 %%
 
@@ -63,7 +67,16 @@ st_list fm_list                    {$$ = NewFatherAddSon(STMT, $1, $2);}
 ;
 
 attr_list:
+NAME data_type	{}
+|NAME data_type PRIMARY KEY LBRACE NAME RBRACE	{}
+|attr_list NAME data_type	{}
+|attr_list NAME data_type PRIMARY KEY LBRACE NAME RBRACE	{}
+;
 
+data_type:
+INT 	{}
+|FLOAT 	{}
+|CHAR LBRACE INTEGER RBRACE 	{}
 
 st_list:
 ST name_list                    {$$ = NewFatherAddSon(ST_LIST, $1, $2);}

@@ -1,80 +1,91 @@
 #pragma once
 
+#include "../MiniSQL.h"
 #include "../RecordManager/Record.h"
+#include "../IndexManager/IndexManager.h"
+#include "../CatalogManager/CatalogManager.h"
 
-class API: public Record, public Index, public Catalog,
-        public SQLGrammarTree
+using namespace std;
+
+//	创建表时的内部调用
+bool API_Create_Table(Table& table)
 {
-public:
-    //	函数原型声明
-    
-    //	API主程序
-    static void exec()
-    {
+    //if create table succeed
+    if (Create_table(table)) {
+        cout << RIGHT_INFO << endl;
+    }
+    else {
+        cout << ERROR_DROP_TABLE_PHRASE << "'" << table.table_name << "'" << endl;
+    }
+}
+
+//	删除表时的内部调用
+bool API_Drop_Table(string table_name)
+{
+    //if drop table succeed
+    if (Drop_table(table_name)) {
+        cout << RIGHT_INFO << endl;
+    }
+    else {
+        cout << ERROR_DROP_TABLE_PHRASE << "'" << table_name << "'" << endl;
+    }
+}
+
+//	创建索引时的内部调用
+bool API_Create_Index(Index index)
+{
+    if (Create_index(index)) {
+        //real create index(call IndexManager)
         
     }
-    
-    //	创建表时的内部调用
-    static bool API_Create_Table()
-    {
-        
+    else {
+        cout << ERROR_CREATE_INDEX_PHRASE << endl;
     }
-    
-    //	删除表时的内部调用
-    static bool API_Drop_Table()
-    {
-        
+}
+
+//	删除索引时的内部调用
+bool API_Drop_Index(string index_name)
+{
+    //if drop table succeed
+    if (Drop_index(index_name)) {
+        cout << RIGHT_INFO << endl;
     }
-    
-    //	创建索引时的内部调用
-    static bool API_Create_Index()
-    {
-        
+    else {
+        cout << ERROR_INDEX_NOT_EXIST << endl;
     }
+}
+
+//	读取表信息
+void Read_Table_Info()
+{
     
-    //	删除索引时的内部调用
-    static bool API_Drop_Index()
-    {
-        
-    }
+}
+
+//	读取索引信息
+void Read_Index(string index_name)
+{
     
-    //	读取表信息
-    static void Read_Table_Info()
-    {
-        
-    }
+}
+
+//	插入纪录时的内部调用
+bool API_Insert()
+{
     
-    //	读取索引信息
-    static void Read_Index(string index_name)
-    {
-        
-    }
+}
+
+//	选择纪录时的内部调用
+bool API_Select()
+{
     
-    //	插入纪录时的内部调用
-    static bool API_Insert()
-    {
-        
-    }
+}
+
+//	删除纪录时的内部调用
+bool API_Delete()
+{
     
-    //	选择纪录时的内部调用
-    static bool API_Select()
-    {
-        
-    }
-    
-    //	删除纪录时的内部调用
-    static bool API_Delete()
-    {
-        
-    }
-    
-    
-private:
-    
-    //操作类型，包括上述所有操作
-    int opType;
-    
-};
+}
+
+
 
 
 

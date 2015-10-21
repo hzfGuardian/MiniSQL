@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_SQL_TAB_H_INCLUDED
-# define YY_YY_SQL_TAB_H_INCLUDED
+#ifndef YY_YY_ANALYSIS_HPP_INCLUDED
+# define YY_YY_ANALYSIS_HPP_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -45,37 +45,40 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    STMT = 258,
-    OP = 259,
-    ST = 260,
-    NSPLIT = 261,
-    ST_LIST = 262,
-    FM = 263,
-    NAME = 264,
-    FM_LIST = 265,
-    NAME_LIST = 266,
-    WH = 267,
-    WHSPLIT = 268,
-    WH_LIST = 269,
-    WHNAME_LIST = 270,
-    WHNAME = 271,
-    OPERATOR = 272,
-    LBORDER = 273,
-    RBORDER = 274,
-    TERMINATOR = 275,
-    NUMBER = 276,
-    INTEGER = 277,
-    LBRACE = 278,
-    RBRACE = 279,
-    DP = 280,
-    TABLE = 281,
-    CT = 282,
-    IDX = 283,
-    PRIMARY = 284,
-    KEY = 285,
-    INT = 286,
-    FLOAT = 287,
-    CHAR = 288
+    AND = 258,
+    ON = 259,
+    SELECT = 260,
+    FROM = 261,
+    WHERE = 262,
+    DROP = 263,
+    TABLE = 264,
+    CREATE = 265,
+    INDEX = 266,
+    PRIMARY = 267,
+    KEY = 268,
+    VALUES = 269,
+    UNIQUE = 270,
+    INSERT = 271,
+    INTO = 272,
+    DELETE = 273,
+    QUIT = 274,
+    EXECFILE = 275,
+    INT = 276,
+    FLOAT = 277,
+    CHAR = 278,
+    NAME = 279,
+    STRING = 280,
+    INTNUM = 281,
+    FLOATNUM = 282,
+    COMPARISON = 283,
+    STMT = 284,
+    ATTR_INFO = 285,
+    ATTR_LIST = 286,
+    ATTR = 287,
+    DATA_TYPE = 288,
+    ATTR_VALUE_LIST = 289,
+    WH_LIST = 290,
+    WH_NAME = 291
   };
 #endif
 
@@ -84,11 +87,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 19 "sql.y" /* yacc.c:1909  */
+#line 20 "Analysis.y" /* yacc.c:1909  */
 
-    struct SqlNodeType* pNode;
+	SQLGrammarTree *pNode;
 
-#line 92 "sql.tab.h" /* yacc.c:1909  */
+#line 95 "Analysis.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -101,4 +104,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_SQL_TAB_H_INCLUDED  */
+#endif /* !YY_YY_ANALYSIS_HPP_INCLUDED  */

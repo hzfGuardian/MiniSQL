@@ -81,7 +81,8 @@ extern FILE* yyin;
 extern char* yytext;
 
 
-#line 85 "Analysis.cpp" /* yacc.c:339  */
+
+#line 86 "Analysis.cpp" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -158,11 +159,11 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "Analysis.y" /* yacc.c:355  */
+#line 23 "Analysis.y" /* yacc.c:355  */
 
-	SQLGrammarTree *pNode;
+	struct SQLGrammarTree *pNode;
 
-#line 166 "Analysis.cpp" /* yacc.c:355  */
+#line 167 "Analysis.cpp" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -179,7 +180,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 183 "Analysis.cpp" /* yacc.c:358  */
+#line 184 "Analysis.cpp" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -480,10 +481,10 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    82,    82,    83,    86,    87,    91,    93,    95,    97,
-      99,   101,   103,   105,   107,   109,   111,   116,   117,   120,
-     121,   124,   125,   128,   129,   130,   136,   137,   143,   144,
-     147,   150,   151,   152
+       0,    74,    74,    75,    78,    79,    83,    85,    87,    89,
+      91,    93,    95,    97,    99,   101,   103,   108,   109,   112,
+     113,   116,   117,   120,   121,   122,   128,   129,   135,   136,
+     139,   142,   143,   144
 };
 #endif
 
@@ -1306,199 +1307,199 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 82 "Analysis.y" /* yacc.c:1646  */
+#line 74 "Analysis.y" /* yacc.c:1646  */
     {	nm_clear();	}
-#line 1312 "Analysis.cpp" /* yacc.c:1646  */
+#line 1313 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 83 "Analysis.y" /* yacc.c:1646  */
+#line 75 "Analysis.y" /* yacc.c:1646  */
     {	nm_clear();	}
-#line 1318 "Analysis.cpp" /* yacc.c:1646  */
+#line 1319 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 86 "Analysis.y" /* yacc.c:1646  */
+#line 78 "Analysis.y" /* yacc.c:1646  */
     {ProcessTree((yyvsp[-1].pNode));nm_clear();}
-#line 1324 "Analysis.cpp" /* yacc.c:1646  */
+#line 1325 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 87 "Analysis.y" /* yacc.c:1646  */
+#line 79 "Analysis.y" /* yacc.c:1646  */
     {ProcessTree((yyvsp[-1].pNode));nm_clear();}
-#line 1330 "Analysis.cpp" /* yacc.c:1646  */
+#line 1331 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 91 "Analysis.y" /* yacc.c:1646  */
+#line 83 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 4, (yyvsp[-5].pNode), (yyvsp[-4].pNode), (yyvsp[-3].pNode), (yyvsp[-1].pNode));}
-#line 1336 "Analysis.cpp" /* yacc.c:1646  */
+#line 1337 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 93 "Analysis.y" /* yacc.c:1646  */
+#line 85 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 3, (yyvsp[-2].pNode), (yyvsp[-1].pNode), (yyvsp[0].pNode));}
-#line 1342 "Analysis.cpp" /* yacc.c:1646  */
+#line 1343 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 95 "Analysis.y" /* yacc.c:1646  */
+#line 87 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 5, (yyvsp[-7].pNode), (yyvsp[-6].pNode), (yyvsp[-5].pNode), (yyvsp[-3].pNode), (yyvsp[-1].pNode));}
-#line 1348 "Analysis.cpp" /* yacc.c:1646  */
+#line 1349 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 97 "Analysis.y" /* yacc.c:1646  */
+#line 89 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 3, (yyvsp[-2].pNode), (yyvsp[-1].pNode), (yyvsp[0].pNode));}
-#line 1354 "Analysis.cpp" /* yacc.c:1646  */
+#line 1355 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 99 "Analysis.y" /* yacc.c:1646  */
+#line 91 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 3, (yyvsp[-6].pNode), (yyvsp[-4].pNode), (yyvsp[-1].pNode));}
-#line 1360 "Analysis.cpp" /* yacc.c:1646  */
+#line 1361 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 101 "Analysis.y" /* yacc.c:1646  */
+#line 93 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 2, (yyvsp[-2].pNode), (yyvsp[0].pNode));}
-#line 1366 "Analysis.cpp" /* yacc.c:1646  */
+#line 1367 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 103 "Analysis.y" /* yacc.c:1646  */
+#line 95 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 3, (yyvsp[-4].pNode), (yyvsp[-2].pNode), (yyvsp[0].pNode));}
-#line 1372 "Analysis.cpp" /* yacc.c:1646  */
+#line 1373 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 105 "Analysis.y" /* yacc.c:1646  */
+#line 97 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 2, (yyvsp[-3].pNode), (yyvsp[0].pNode));}
-#line 1378 "Analysis.cpp" /* yacc.c:1646  */
+#line 1379 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 107 "Analysis.y" /* yacc.c:1646  */
+#line 99 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 3, (yyvsp[-5].pNode), (yyvsp[-2].pNode), (yyvsp[0].pNode));}
-#line 1384 "Analysis.cpp" /* yacc.c:1646  */
+#line 1385 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 109 "Analysis.y" /* yacc.c:1646  */
+#line 101 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(STMT, 2, (yyvsp[-1].pNode), (yyvsp[0].pNode));}
-#line 1390 "Analysis.cpp" /* yacc.c:1646  */
+#line 1391 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 111 "Analysis.y" /* yacc.c:1646  */
+#line 103 "Analysis.y" /* yacc.c:1646  */
     {nm_clear();	printf("Bye. Fuck you next time.\n");	exit(0);}
-#line 1396 "Analysis.cpp" /* yacc.c:1646  */
+#line 1397 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 116 "Analysis.y" /* yacc.c:1646  */
+#line 108 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(ATTR_INFO, 1, (yyvsp[0].pNode));}
-#line 1402 "Analysis.cpp" /* yacc.c:1646  */
+#line 1403 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 117 "Analysis.y" /* yacc.c:1646  */
+#line 109 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(ATTR_INFO, 2, (yyvsp[-6].pNode), (yyvsp[-1].pNode));}
-#line 1408 "Analysis.cpp" /* yacc.c:1646  */
+#line 1409 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 120 "Analysis.y" /* yacc.c:1646  */
+#line 112 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(ATTR_LIST, 1, (yyvsp[0].pNode));}
-#line 1414 "Analysis.cpp" /* yacc.c:1646  */
+#line 1415 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 121 "Analysis.y" /* yacc.c:1646  */
+#line 113 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=FatherAddSon((yyvsp[-2].pNode), (yyvsp[0].pNode));}
-#line 1420 "Analysis.cpp" /* yacc.c:1646  */
+#line 1421 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 124 "Analysis.y" /* yacc.c:1646  */
+#line 116 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(ATTR, 2, (yyvsp[-1].pNode), (yyvsp[0].pNode));}
-#line 1426 "Analysis.cpp" /* yacc.c:1646  */
+#line 1427 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 125 "Analysis.y" /* yacc.c:1646  */
+#line 117 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(ATTR, 3, (yyvsp[-2].pNode), (yyvsp[-1].pNode), (yyvsp[0].pNode));}
-#line 1432 "Analysis.cpp" /* yacc.c:1646  */
+#line 1433 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 128 "Analysis.y" /* yacc.c:1646  */
+#line 120 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(DATA_TYPE, 1, (yyvsp[0].pNode));}
-#line 1438 "Analysis.cpp" /* yacc.c:1646  */
+#line 1439 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 129 "Analysis.y" /* yacc.c:1646  */
+#line 121 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(DATA_TYPE, 1, (yyvsp[0].pNode));}
-#line 1444 "Analysis.cpp" /* yacc.c:1646  */
+#line 1445 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 130 "Analysis.y" /* yacc.c:1646  */
+#line 122 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(DATA_TYPE, 2, (yyvsp[-3].pNode), (yyvsp[-1].pNode));}
-#line 1450 "Analysis.cpp" /* yacc.c:1646  */
+#line 1451 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 136 "Analysis.y" /* yacc.c:1646  */
+#line 128 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(ATTR_VALUE_LIST, 1, (yyvsp[0].pNode));}
-#line 1456 "Analysis.cpp" /* yacc.c:1646  */
+#line 1457 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 27:
-#line 137 "Analysis.y" /* yacc.c:1646  */
+#line 129 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=FatherAddSon((yyvsp[-2].pNode), (yyvsp[0].pNode));}
-#line 1462 "Analysis.cpp" /* yacc.c:1646  */
+#line 1463 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 143 "Analysis.y" /* yacc.c:1646  */
+#line 135 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(WH_LIST, 1, (yyvsp[0].pNode));}
-#line 1468 "Analysis.cpp" /* yacc.c:1646  */
+#line 1469 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 144 "Analysis.y" /* yacc.c:1646  */
+#line 136 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=FatherAddSon((yyvsp[-2].pNode), (yyvsp[0].pNode));}
-#line 1474 "Analysis.cpp" /* yacc.c:1646  */
+#line 1475 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 147 "Analysis.y" /* yacc.c:1646  */
+#line 139 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=NewFatherAddSon(WH_NAME, 3, (yyvsp[-2].pNode), (yyvsp[-1].pNode), (yyvsp[0].pNode));}
-#line 1480 "Analysis.cpp" /* yacc.c:1646  */
+#line 1481 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 150 "Analysis.y" /* yacc.c:1646  */
+#line 142 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=(yyvsp[0].pNode);}
-#line 1486 "Analysis.cpp" /* yacc.c:1646  */
+#line 1487 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 151 "Analysis.y" /* yacc.c:1646  */
+#line 143 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=(yyvsp[0].pNode);}
-#line 1492 "Analysis.cpp" /* yacc.c:1646  */
+#line 1493 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 152 "Analysis.y" /* yacc.c:1646  */
+#line 144 "Analysis.y" /* yacc.c:1646  */
     {(yyval.pNode)=(yyvsp[0].pNode);}
-#line 1498 "Analysis.cpp" /* yacc.c:1646  */
+#line 1499 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
 
-#line 1502 "Analysis.cpp" /* yacc.c:1646  */
+#line 1503 "Analysis.cpp" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1726,7 +1727,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 157 "Analysis.y" /* yacc.c:1906  */
+#line 149 "Analysis.y" /* yacc.c:1906  */
 
 
 

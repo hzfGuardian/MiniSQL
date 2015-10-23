@@ -12,6 +12,10 @@ Index idx;
 
 NodeManager node_manager;
 
+
+extern void yyrestart(FILE* fp);
+extern FILE* yyin;
+
 //以下为语法树外部函数
 
 SQLGrammarTree* MallocNewNode()
@@ -196,12 +200,31 @@ void ProcessTree(SQLGrammarTree* pNode)
         
         case EXECFILE:
             
+            //move to next node, file name
+            current_node = current_node->lpNext;
+
+            //get file name
+            if(current_node != NULL)
+            {
+                FILE* fp = fopen(current_node->text, "r");
+                if (fp != NULL)
+                {   
+                    yyin = fp;
+                    yyrestart(yyin);
+                }
+                else
+                {
+                    printf("error: no such file exists: %s\n", current_node->text);
+                    return;
+                }
+            }
+
             break;
         default:
             break;
     }
     
-    cout << "Info: done.\n";
+    cout << "Info: done." << endl;
 }
 
 SQLGrammarTree* FatherAddSon(SQLGrammarTree* pFather, SQLGrammarTree* pSon)
@@ -260,12 +283,14 @@ void FreeTree(SQLGrammarTree* pNode)
 //clear
 void nm_clear()
 {
+    printf("Free: ");
     for (int i = 0; i < node_manager.size(); ++i)
     {
-        printf("%s\n", node_manager[i]->text);
+        printf("%s ", node_manager[i]->text);
         delete node_manager[i];
         node_manager[i] = NULL;
     }
+    printf("\n");
     node_manager.clear();
 }
 

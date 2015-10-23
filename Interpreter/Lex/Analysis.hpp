@@ -87,9 +87,9 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 22 "Analysis.y" /* yacc.c:1909  */
+#line 23 "Analysis.y" /* yacc.c:1909  */
 
-	SQLGrammarTree *pNode;
+	struct SQLGrammarTree *pNode;
 
 #line 95 "Analysis.hpp" /* yacc.c:1909  */
 };

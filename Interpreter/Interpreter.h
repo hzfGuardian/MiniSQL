@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../MiniSQL.h"
-#include "Lex/lex.cpp"
+//#include "Lex/lex.cpp"
 #include "Lex/Analysis.hpp"
 
 using namespace std;
@@ -79,12 +79,13 @@ public:
         strcpy(scan_str, sql_instr.c_str());
 
         scan_str[strlen(scan_str)+1] = '\0';
-        
+        /*
         yy_scan_buffer(scan_str, strlen(scan_str)+2);
         
         yyparse();
 
         yy_delete_buffer(YY_CURRENT_BUFFER);
+        */
         
         //used for check
         cout << "Deal success" << endl;

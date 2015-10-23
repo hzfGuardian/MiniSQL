@@ -1,0 +1,4 @@
+create table a(
+id char(8),
+name int
+);

@@ -1299,7 +1299,7 @@ YY_RULE_SETUP
 {	
 				if(finished_state)	
 					printf(PROMPT);	
-				else
+				else if(yyin == stdin)
 					printf(ENTER_SIGN);
 				}
 	YY_BREAK
@@ -2338,8 +2338,8 @@ int yywrap()
 {
     if(yyin == stdin)
         printf("yywrap called.\n");
-    if(yyin != stdin) {
-        fclose(yyin);
+    else {
+        yyin = stdin;
         return 0;
     }
 

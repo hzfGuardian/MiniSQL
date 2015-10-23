@@ -15,23 +15,15 @@ extern int yylineno;
 extern FILE* yyin;
 extern char* yytext;
 
+
 %}
 
 
 
 %union {
-	SQLGrammarTree *pNode;
+	struct SQLGrammarTree *pNode;
 }
 
-/*
-%destructor	{	
-	if($$->type!=0){	
-		printf("free %d\n", $$->type);	
-		delete $$;	
-		$$=NULL;
-	}	
-}	<pNode>	
-*/
 
 %token AND ON
 %token SELECT FROM WHERE DROP TABLE CREATE INDEX PRIMARY KEY VALUES UNIQUE INSERT INTO DELETE QUIT EXECFILE

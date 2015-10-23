@@ -17,10 +17,21 @@ extern char* yytext;
 
 %}
 
+
+
 %union {
 	SQLGrammarTree *pNode;
 }
 
+/*
+%destructor	{	
+	if($$->type!=0){	
+		printf("free %d\n", $$->type);	
+		delete $$;	
+		$$=NULL;
+	}	
+}	<pNode>	
+*/
 
 %token AND ON
 %token SELECT FROM WHERE DROP TABLE CREATE INDEX PRIMARY KEY VALUES UNIQUE INSERT INTO DELETE QUIT EXECFILE
@@ -56,7 +67,8 @@ extern char* yytext;
 %type<pNode> WH_LIST WH_NAME
 
 
-%type<pNode> program
+/* %type<pNode> program */
+%type<pNode> error
 %type<pNode> stmt_list stmt 
 %type<pNode> attr_info attr_list attr data_type 
 %type<pNode> attr_value_list 
@@ -64,13 +76,15 @@ extern char* yytext;
 %type<pNode> real_value
 
 
+
 %%
 
-program: QUIT   {exit(0);}
-|   stmt_list   {$$=$1;}
+stmt_list: error ';'		{	nm_clear();	}
+|	stmt_list error ';'		{	nm_clear();	}
 
-stmt_list: stmt ';'	{ProcessTree($1);FreeTree($1);}
-|	stmt_list stmt ';'	{ProcessTree($2);FreeTree($2);}
+
+stmt_list: stmt ';'	{ProcessTree($1);nm_clear();}
+|	stmt_list stmt ';'	{ProcessTree($2);nm_clear();}
 ;
 
 
@@ -93,6 +107,8 @@ stmt: CREATE TABLE NAME '(' attr_info ')'	{$$=NewFatherAddSon(STMT, 4, $1, $2, $
 |	SELECT '*' FROM NAME WHERE wh_list 		{$$=NewFatherAddSon(STMT, 3, $1, $4, $6);}
 
 |	EXECFILE NAME       					{$$=NewFatherAddSon(STMT, 2, $1, $2);}
+
+|	QUIT									{nm_clear();	printf("Bye. Fuck you next time.\n");	exit(0);}
 
 ;
 
@@ -151,8 +167,4 @@ void yyerror(const char *s, ...)
     va_end(ap);
 }
 
-int main()
-{
-	yyparse();
-	return 0;
-}
+

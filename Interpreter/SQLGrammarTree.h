@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 //SQL语法树
 struct SQLGrammarTree {
 	int type;
@@ -23,7 +25,11 @@ SQLGrammarTree* NewFatherAddSon(int iType, int num_of_sons, ...);
 void FreeTree(SQLGrammarTree* pNode);
 
 
+//节点管理器
+typedef std::vector< SQLGrammarTree* > NodeManager;
 
 
+//clear
+void nm_clear();
 
 

@@ -6,9 +6,19 @@
 #include <cstring>
 #include <cstdarg>
 
-//#include "Interpreter/Lex/Analysis.hpp"
-
 using namespace std;
+
+//allow user input 500 characters once in a line
+#define MAX_ONE_LINE 256
+
+//prompt
+#define WELCOME     "Welcome to the minisql system. Hope you have a good day."
+#define PROMPT      "\nminisql> "
+#define ENTER_SIGN  "      -> "
+#define BYE_BYE     "Good Bye. Fuck you next time."
+
+
+
 
 //出错信息宏定义
 //	以下是程序中用到的出错信息定义
@@ -59,10 +69,6 @@ struct Table
     string table_name;  //表名
     int attr_count;				//表中属性的总个数
     Attribute attrs[32];	//表的所有属性列表, 最多32个属性
-    friend ostream& operator<<(ostream& os, const Table& obj) {
-        // specific code to write obj
-        return os << obj.table_name << " " << obj.attr_count;
-    }
 };
 
 //	用于描述判断条件的信息

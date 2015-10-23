@@ -1,23 +1,24 @@
 #include "CatalogManager.h"
 
-bool Create_table(Table& table)
+bool Create_table(Table table)
 {
 	ofstream out;
 	int i;
-	bool exist = Judge_table_exist(table.name);
+	bool exist = Judge_table_exist(table.table_name);
+
 	if(exist)
 	{
 		cout<<"This table has existed!"<<endl;
 		return false;
 	} 
-	cout<<table.name<<endl;
+	cout<<table.table_name<<endl;
 	out.open("Tablelist.txt",ios::app);
-	out<<table.name<<endl;
+	out<<table.table_name<<endl;
 	out.close();
 	
-	string table_info = table.name + "_table.info";
+	string table_info = table.table_name + "_table.info";
 	out.open(table_info.c_str(),ios::app);
-	for(i=0;i<table.attr_num;i++)
+	for(i=0;i<table.attr_count;i++)
 	{
 		out<<table.attrs[i].attr_name<<" ";
 		out<<table.attrs[i].attr_key_type<<" ";
@@ -27,13 +28,13 @@ bool Create_table(Table& table)
 	}
 	out.close();
 	
-	string table_rec = table.name + "_table.rec";
+	string table_rec = table.table_name + "_table.rec";
 	out.open(table_rec.c_str(),ios::app);
 	out.close();
 	return true;
 }
 
-bool Create_index(Index & index)
+bool Create_index(Index index)
 {
 	bool exist = Judge_index_exist(index.index_name);
 	if(exist)
@@ -60,7 +61,8 @@ bool Create_index(Index & index)
 	
 	string index_rec = index.index_name + "_index.rec";
 	out.open(index_rec.c_str(),ios::app);
-	out.close(); 
+	out.close();
+    return true;
 }
 
 bool Drop_table(string table_name)

@@ -2,7 +2,7 @@
 #include "SQLGrammarTree.h"
 #include "../MiniSQL.h"
 #include "Lex/Analysis.hpp"
-//#include "../API/API.h"
+#include "../API/API.h"
 
 using namespace std;
 
@@ -10,11 +10,14 @@ Table tbl;
 string primary_key_name;
 Index idx;
 
+NodeManager node_manager;
+
 //以下为语法树外部函数
 
 SQLGrammarTree* MallocNewNode()
 {
     SQLGrammarTree* pNew = new SQLGrammarTree;
+    node_manager.push_back(pNew);
     if (!pNew)
     {
         return pNew;
@@ -111,7 +114,6 @@ void ProcessTree(SQLGrammarTree* pNode)
                     
                     //call API to create table
                     //API_Create_Table(tbl);
-                    //cout << tbl << endl;
                     
                     break;
                 
@@ -136,7 +138,7 @@ void ProcessTree(SQLGrammarTree* pNode)
                     idx.attr_name = string(current_node->text);
                     
                     //call API to create index
-                    //API_Create_Index(idx);
+                    API_Create_Index(idx);
                     
                     break;
                     
@@ -156,7 +158,7 @@ void ProcessTree(SQLGrammarTree* pNode)
                     current_node = current_node->lpNext;
                     
                     //call API to drop table
-                    //API_Drop_Table(string(current_node->text));
+                    API_Drop_Table(string(current_node->text));
                     
                     break;
                     
@@ -166,7 +168,7 @@ void ProcessTree(SQLGrammarTree* pNode)
                     current_node = current_node->lpNext;
                     
                     //call API to drop index
-                    //API_Drop_Index(string(current_node->text));
+                    API_Drop_Index(string(current_node->text));
 
                     break;
                     
@@ -175,7 +177,8 @@ void ProcessTree(SQLGrammarTree* pNode)
             }
             break;
         
-        case INSERT:
+        case INSERT: //INSERT INTO NAME VALUES '(' attr_value_list ')'
+            
             //move to next node, "name"
             current_node = current_node->lpNext;
             
@@ -197,8 +200,7 @@ void ProcessTree(SQLGrammarTree* pNode)
         default:
             break;
     }
-    //cout << INTNUM << endl;
-    //cout << pNode->lpSub->type << endl;
+    
     cout << "Info: done.\n";
 }
 
@@ -255,6 +257,17 @@ void FreeTree(SQLGrammarTree* pNode)
 }
 
 
+//clear
+void nm_clear()
+{
+    for (int i = 0; i < node_manager.size(); ++i)
+    {
+        printf("%s\n", node_manager[i]->text);
+        delete node_manager[i];
+        node_manager[i] = NULL;
+    }
+    node_manager.clear();
+}
 
 
 

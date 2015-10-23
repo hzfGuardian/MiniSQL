@@ -7,9 +7,11 @@
 #include <string.h>
 #include <stdarg.h>
 #include "../SQLGrammarTree.h"
+#include "../../MiniSQL.h"
 #include "Analysis.hpp"
 
 extern void yyerror(const char* s, ...);
+int finished_state = 0;
 
 %}
 
@@ -17,15 +19,19 @@ extern void yyerror(const char* s, ...);
 
 %%
 
+
 and     {
+				finished_state = 0;
                 return AND;   
         }
 
 on      {
+				finished_state = 0;
                 return ON;   
         }
 
 select  {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=SELECT;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"select");
@@ -33,14 +39,17 @@ select  {
         }
 
 from    {
+                finished_state = 0;
                 return FROM;   
         }
 
 where   {
+                finished_state = 0;
                 return WHERE;   
         }
 
 drop    {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=DROP;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"drop");
@@ -48,6 +57,7 @@ drop    {
         }
 
 table   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=TABLE;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"table");
@@ -55,6 +65,7 @@ table   {
         }
 
 create  {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=CREATE;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"create");
@@ -62,6 +73,7 @@ create  {
         }
 
 index   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=INDEX;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"index");
@@ -69,18 +81,22 @@ index   {
         }
 
 primary {
+                finished_state = 0;
                 return PRIMARY;   
         }
 
 key     {   
+                finished_state = 0;
                 return KEY;   
         }
 
 values  {
+                finished_state = 0;
                 return VALUES;   
         }
 
 unique  {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=UNIQUE;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"unique");
@@ -88,6 +104,7 @@ unique  {
         }
 
 insert  {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=INSERT;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"insert");
@@ -95,10 +112,12 @@ insert  {
         }
 
 into	{
+                finished_state = 0;
                 return INTO; 
 		}
 
 delete  {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=DELETE;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"delete");
@@ -106,6 +125,7 @@ delete  {
         }
 
 ^quit   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=QUIT;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"quit");
@@ -113,6 +133,7 @@ delete  {
         }
 
 execfile  {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=EXECFILE;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"execfile");
@@ -120,6 +141,7 @@ execfile  {
         }
 
 int     {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=INT;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"int");
@@ -127,6 +149,7 @@ int     {
         }
 
 float   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=FLOAT;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"float");
@@ -134,6 +157,7 @@ float   {
         }
 
 char    {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=CHAR;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"char");
@@ -142,6 +166,7 @@ char    {
 
 
 -?[0-9]+    {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=INTNUM;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -154,6 +179,7 @@ char    {
 -?[0-9]+E[-+]?[0-9]+ |  
 -?[0-9]+"."[0-9]*E[-+]?[0-9]+   |       
 -?"."[0-9]+E[-+]?[0-9]+         {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=FLOATNUM;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -163,6 +189,7 @@ char    {
 
 '(\\.|''|[^'\n])*'  |
 \"(\\.|\"\"|[^"\n])*\"          {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=STRING;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext+1);
@@ -170,14 +197,15 @@ char    {
                 return STRING;   
         }
 
-'(\\.|[^'\n])*$                 {   yyerror("Unterminated string %s", yytext);  }
-\"(\\.|[^"\n])*$                 {   yyerror("Unterminated string %s", yytext);  }
+'(\\.|[^'\n])*$                 {   finished_state = 0;	yyerror("Unterminated string %s", yytext);  }
+\"(\\.|[^"\n])*$                 {   finished_state = 0;	yyerror("Unterminated string %s", yytext);  }
 
+[;]								{	finished_state = 1;	return yytext[0];	}
 
-
-[-+&~|^/%()*,.;!]               {   return yytext[0];   }
+[-+&~|^/%()*,.!]               {   finished_state = 0;	return yytext[0];   }
 
 "<>"   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=COMPARISON;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -185,6 +213,7 @@ char    {
         }	
 
 "<="   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=COMPARISON;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -192,6 +221,7 @@ char    {
         }
 
 ">="   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=COMPARISON;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -199,6 +229,7 @@ char    {
         }
 
 "<"   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=COMPARISON;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -206,6 +237,7 @@ char    {
         }
 
 ">"   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=COMPARISON;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -213,6 +245,7 @@ char    {
         }
 
 "="   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=COMPARISON;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -220,6 +253,7 @@ char    {
         }
 
 [A-Za-z][A-Za-z0-9_]*   {   
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=NAME;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext);
@@ -227,6 +261,7 @@ char    {
         }
 
 `[^`/\\.\n]+`   {
+				finished_state = 0;
 				yylval.pNode = MallocNewNode();
                 yylval.pNode->type=NAME;
                 snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"%s",yytext+1);
@@ -234,24 +269,30 @@ char    {
                 return NAME;   
         }
 
-`[^`\n]*$               {   yyerror("Unterminated name %s", yytext);  }
+`[^`\n]*$               {  finished_state = 0; yyerror("Unterminated name %s", yytext);  }
 
-[ \t\n]                 ;
+[\n]			{	
+				if(finished_state)	
+					printf(PROMPT);	
+				else
+					printf(ENTER_SIGN);
+				}
 
-.                       {   yyerror("mystery character '%c'", *yytext);    }
+[ \t]                 {	finished_state = 0;	}
+
+.                       {  finished_state = 0; yyerror("mystery character '%c'", *yytext);    }
 
 %%
 
 int yywrap()
 {
-	/*
     if(yyin == stdin)
         printf("yywrap called.\n");
     if(yyin != stdin) {
         fclose(yyin);
         return 0;
     }
-    */
+
     return 1;
 }
 

@@ -117,7 +117,7 @@ void ProcessTree(SQLGrammarTree* pNode)
                     }
                     
                     //call API to create table
-                    //API_Create_Table(tbl);
+                    API_Create_Table(tbl);
                     
                     break;
                 
@@ -283,14 +283,14 @@ void FreeTree(SQLGrammarTree* pNode)
 //clear
 void nm_clear()
 {
-    printf("Free: ");
+    //printf("Free: ");
     for (int i = 0; i < node_manager.size(); ++i)
     {
-        printf("%s ", node_manager[i]->text);
+        //printf("%s ", node_manager[i]->text);
         delete node_manager[i];
         node_manager[i] = NULL;
     }
-    printf("\n");
+    //printf("\n");
     node_manager.clear();
 }
 

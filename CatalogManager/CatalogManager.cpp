@@ -8,15 +8,15 @@ bool Create_table(Table table)
 
 	if(exist)
 	{
-		cout<<"This table has existed!"<<endl;
+		cout<<"error: This table has existed!"<<endl;
 		return false;
 	} 
-	cout<<table.table_name<<endl;
-	out.open("Tablelist.txt",ios::app);
+	cout<< "Before open file: " << table.table_name<<endl;
+	out.open("../../DBFiles/Tablelist.txt",ios::app);
 	out<<table.table_name<<endl;
 	out.close();
 	
-	string table_info = table.table_name + "_table.info";
+	string table_info = "../../DBFiles/" + table.table_name + "_table.info";
 	out.open(table_info.c_str(),ios::app);
 	for(i=0;i<table.attr_count;i++)
 	{
@@ -28,7 +28,7 @@ bool Create_table(Table table)
 	}
 	out.close();
 	
-	string table_rec = table.table_name + "_table.rec";
+	string table_rec = "../../DBFiles/" + table.table_name + "_table.rec";
 	out.open(table_rec.c_str(),ios::app);
 	out.close();
 	return true;
@@ -55,7 +55,7 @@ bool Create_index(Index index)
 		return false;
 	}
 	ofstream out;
-	out.open("Indexlist.txt",ios::app);
+	out.open("../../DBFiles/Indexlist.txt",ios::app);
 	out<<index.index_name<<" "<<index.table_name<<" "<<index.attr_name<<endl;
 	out.close();
 	
@@ -73,16 +73,16 @@ bool Drop_table(string table_name)
 		cout<<"No such table!"<<endl;
 		return false;
 	}
-	string table_rec = table_name + "_table.rec";
+	string table_rec = "../../DBFiles/" + table_name + "_table.rec";
 	remove(table_rec.c_str()); 
-	string table_info = table_name + "_table.info";
+	string table_info = "../../DBFiles/" + table_name + "_table.info";
 	remove(table_info.c_str());
 	
 	string table_list = "";
 	char Table_name[32];
 	string tablename;
 	ifstream in;
-	in.open("Tablelist.txt",ios::in);
+	in.open("../../DBFiles/Tablelist.txt",ios::in);
 	while(!in.eof())
 	{
 		in.getline(Table_name,32);
@@ -98,9 +98,9 @@ bool Drop_table(string table_name)
 	}
 	in.close();
 	
-	remove("Tablelist.txt");
+	remove("../../DBFiles/Tablelist.txt");
 	ofstream out;
-	out.open("Tablelist.txt",ios::app);
+	out.open("../../DBFiles/Tablelist.txt",ios::app);
 	out<<table_list;
 	out.close();
 	return true; 
@@ -114,14 +114,14 @@ bool Drop_index(string index_name)
 		cout<<"No such index!"<<endl;
 		return false;
 	}
-	string index_rec = index_name + "_index.rec";
+	string index_rec = "../../DBFiles/" + index_name + "_index.rec";
 	remove(index_rec.c_str()); 
 	
 	string index_list = "";
 	char Index_name[128];
 	string indexname;
 	ifstream in;
-	in.open("Indexlist.txt",ios::in);
+	in.open("../../DBFiles/Indexlist.txt",ios::in);
 	int i;
 	while(!in.eof())
 	{
@@ -148,9 +148,9 @@ bool Drop_index(string index_name)
 	}
 	in.close();
 	
-	remove("Indexlist.txt");
+	remove("../../DBFiles/Indexlist.txt");
 	ofstream out;
-	out.open("Indexlist.txt",ios::app);
+	out.open("../../DBFiles/Indexlist.txt",ios::app);
 	out<<index_list;
 	out.close();
 	return true; 
@@ -160,7 +160,7 @@ bool Judge_attr_primary_unique(string table_name, string attr_name)
 {
 	fstream in;
 	int i;
-	string table_info = table_name + "_table.info";
+	string table_info = "../../DBFiles/" + table_name + "_table.info";
 	in.open(table_info.c_str(),ios::in);
 	char attr[128];
 	string attrname;
@@ -197,14 +197,20 @@ bool Judge_table_exist(string table_name)
 	bool flag = false;
 	char Table_name[32];
 	string tablename;
-	in.open("Tablelist.txt",ios::in);
+
+	system("pwd");
+	in.open("../../DBFiles/Tablelist.txt", ios::in);
+
 	while(!in.eof())
 	{
 		in.getline(Table_name,32);
+		printf("%s\n", Table_name);
 		tablename = Table_name;
+		cout << "tablename: " << tablename << endl;
 		if(tablename == table_name)
 		{
 			flag = true; 
+			break;
 		}
 	}
 	in.close();
@@ -218,7 +224,7 @@ bool Judge_index_exist(string index_name)
 	bool flag = false;
 	char index[128];
 	string indexname;
-	in.open("Indexlist.txt",ios::in);
+	in.open("../../DBFiles/Indexlist.txt",ios::in);
 	while(!in.eof())
 	{
 		in.getline(index,128);
@@ -247,8 +253,10 @@ bool Judge_attr_exist(string table_name,string attr_name)
 	ifstream in;
 	bool flag = false;
 	int i;
-	string table_info = table_name + "_table.info";
+	string table_info = "../../DBFiles/" + table_name + "_table.info";
+	
 	in.open(table_info.c_str(),ios::in);
+
 	char attr[128];
 	string attrname;
 	

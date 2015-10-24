@@ -13,7 +13,7 @@ void API_Create_Table(Table table)
         cout << RIGHT_INFO << endl;
     }
     else {
-        cout << ERROR_DROP_TABLE_PHRASE << "'" << table.table_name << "'" << endl;
+        //cout << ERROR_DROP_TABLE_PHRASE << "'" << table.table_name << "'" << endl;
     }
     
 }

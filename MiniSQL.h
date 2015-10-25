@@ -3,6 +3,7 @@
 #include <list>
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include <cstring>
 #include <cstdarg>
 
@@ -88,7 +89,11 @@ struct Index
     string attr_name;	//	索引所对应的属性
 };
 
-
-
+//insert into card values("", "", 1234.4);
+struct Tuple
+{
+    Table table;
+    string attr_values[32];
+};
 
 

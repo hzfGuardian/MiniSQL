@@ -90,10 +90,20 @@ struct Index
 };
 
 //insert into card values("", "", 1234.4);
-struct Tuple
+struct Tuple: public Table
 {
-    Table table;
     string attr_values[32];
+    int length()
+    {
+        int len = 0;
+        for (int i = 0; i < attr_count; ++i)
+        {
+            len += attrs[i].attr_len;
+        }
+        return len;
+    }
 };
+
+
 
 

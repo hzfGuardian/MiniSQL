@@ -33,3 +33,22 @@ typedef std::vector< SQLGrammarTree* > NodeManager;
 void nm_clear();
 
 
+//以下为不同语句处理的函数
+
+void ProcessCreateTable(SQLGrammarTree* );
+
+void ProcessCreateIndex(SQLGrammarTree* );
+
+void ProcessDropTable(SQLGrammarTree* );
+
+void ProcessDropIndex(SQLGrammarTree* );
+
+void ProcessInsert(SQLGrammarTree* );
+
+void ProcessDelete(SQLGrammarTree* );
+
+void ProcessSelect(SQLGrammarTree* );
+
+void ProcessExecfile(SQLGrammarTree* );
+
+

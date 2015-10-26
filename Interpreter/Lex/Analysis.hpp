@@ -70,15 +70,16 @@ extern int yydebug;
     STRING = 280,
     INTNUM = 281,
     FLOATNUM = 282,
-    COMPARISON = 283,
-    STMT = 284,
-    ATTR_INFO = 285,
-    ATTR_LIST = 286,
-    ATTR = 287,
-    DATA_TYPE = 288,
-    ATTR_VALUE_LIST = 289,
-    WH_LIST = 290,
-    WH_NAME = 291
+    EMPTY = 283,
+    COMPARISON = 284,
+    STMT = 285,
+    ATTR_INFO = 286,
+    ATTR_LIST = 287,
+    ATTR = 288,
+    DATA_TYPE = 289,
+    ATTR_VALUE_LIST = 290,
+    WH_LIST = 291,
+    WH_NAME = 292
   };
 #endif
 
@@ -91,7 +92,7 @@ union YYSTYPE
 
 	struct SQLGrammarTree *pNode;
 
-#line 95 "Analysis.hpp" /* yacc.c:1909  */
+#line 96 "Analysis.hpp" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

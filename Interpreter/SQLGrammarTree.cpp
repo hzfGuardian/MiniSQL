@@ -7,7 +7,6 @@
 using namespace std;
 
 Table tbl;
-string primary_key_name;
 Index idx;
 Tuple tuple;
 
@@ -186,6 +185,9 @@ void nm_clear()
 
 void ProcessCreateTable(SQLGrammarTree* current_node)
 {
+    //primary key
+    string primary_key_name = "";
+
     //initialize table
     tbl.attr_count = 0;
     
@@ -238,7 +240,8 @@ void ProcessCreateTable(SQLGrammarTree* current_node)
             
             //if char(-1), return error
             if (tbl.attrs[tbl.attr_count].attr_len <= 0) {
-                printf("ERROR_CHAR_INDEX_LESS_ZERO\n");
+                printf(ERROR_CHAR_INDEX_LESS_ZERO);
+                printf("\n");
                 return;
             }
             
@@ -255,6 +258,29 @@ void ProcessCreateTable(SQLGrammarTree* current_node)
         //move to next attribute
         current_node = current_node->lpNext;
         
+    }
+
+    //check whether primary key legal
+    int primary_id;
+    if(primary_key_name != "") {
+        bool exist = false;
+        for (int i = 0; i < tbl.attr_count; ++i)
+        {
+            if(tbl.attrs[i].attr_name == primary_key_name) {
+                primary_id = i;
+                exist = true;
+            }
+        }
+        if (exist == false)
+        {
+            printf("error: illegal primary key %s.\n", primary_key_name.c_str());
+            return;
+        }
+        else
+        {
+            //note primary key
+            tbl.attrs[primary_id].attr_key_type = PRIMARY;
+        }
     }
     
     //call API to create table
@@ -312,7 +338,7 @@ void ProcessInsert(SQLGrammarTree* current_node)
     //check existence of table
     if(Judge_table_exist(string(current_node->text)) == false) //no exist
     {
-        printf("error: no such table exists: %s\n", current_node->text);
+        printf("error: no such table exists: %s.\n", current_node->text);
         return;
     }
     //get table name
@@ -321,13 +347,56 @@ void ProcessInsert(SQLGrammarTree* current_node)
     //move to next node, "attr_value_list"
     current_node = current_node->lpNext;
 
+    //read table information
+    Table tbl = Read_Table_Info(tuple.table_name);
     //get each value
     current_node = current_node->lpSub;
+
+    vector<int> v;
     while(current_node != NULL) 
     {
-        //check legal
-        
+        //get attribute list type
+        v.push_back(current_node.type);
+        current_node = current_node->lpNext;
     }
+
+    //check the attribute list size
+    if (v.size() != tbl.attr_count)
+    {
+        printf("error: the number of attribute list is not equal as defined.\n");
+        return;
+    }
+    
+    //check each value type
+    for (int i = 0; i < v.size(); ++i)
+    {
+        //if input null but it is a primary key
+        if (v[i] == EMPTY && tbl.attrs[i].attr_key_type == PRIMARY)
+        {
+            printf("error: cannot set null value on primary key: %s.\n", tbl.attrs[i].attr_name.c_str());
+            return;
+        }
+
+        //check type matching
+        if (v[i] == STRING && tbl.attrs[i].attr_type != CHAR)
+        {
+            printf("error: type does not match on attribute: %s.\n", tbl.attrs[i].attr_name.c_str());
+            return;
+        }
+        if(v[i] == INTNUM && tbl.attrs[i].attr_type == STRING)
+        {
+            printf("error: type does not match on attribute: %s.\n", tbl.attrs[i].attr_name.c_str());
+            return;
+        }
+        if(v[i] == FLOATNUM && tbl.attrs[i].attr_type == STRING)
+        {
+            printf("error: type does not match on attribute: %s.\n", tbl.attrs[i].attr_name.c_str());
+            return;
+        }
+    }
+    
+    //real API Insert
+    API_Insert();
 }
 
 void ProcessDelete(SQLGrammarTree* current_node)
@@ -356,13 +425,11 @@ void ProcessExecfile(SQLGrammarTree* current_node)
         }
         else
         {
-            printf("error: no such file exists: %s\n", current_node->text);
+            printf("error: no such SQL script file exists: %s\n", current_node->text);
             return;
         }
     }
 }
-
-
 
 
 

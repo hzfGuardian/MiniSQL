@@ -34,6 +34,7 @@ extern char* yytext;
 %token STRING
 %token INTNUM
 %token FLOATNUM
+%token EMPTY
 
 %token COMPARISON
 
@@ -49,7 +50,7 @@ extern char* yytext;
 %type<pNode> AND ON
 %type<pNode> SELECT FROM WHERE DROP TABLE CREATE INDEX PRIMARY KEY VALUES UNIQUE INSERT INTO DELETE QUIT EXECFILE
 %type<pNode> INT FLOAT CHAR
-%type<pNode> NAME STRING INTNUM FLOATNUM
+%type<pNode> NAME STRING INTNUM FLOATNUM EMPTY
 
 %type<pNode> COMPARISON 
 
@@ -142,6 +143,7 @@ wh_name: NAME COMPARISON real_value			{$$=NewFatherAddSon(WH_NAME, 3, $1, $2, $3
 real_value: STRING 							{$$=$1;}
 |	INTNUM									{$$=$1;}
 |	FLOATNUM 								{$$=$1;}
+|	EMPTY									{$$=$1;}
 ;
 
 

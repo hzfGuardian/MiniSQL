@@ -1,5 +1,5 @@
 #!/bin/zsh
 bison -o Analysis.cpp -d Analysis.y
 flex -o lex.cpp Analysis.l
-g++ ../../MiniSQL.cpp Analysis.cpp ../SQLGrammarTree.cpp ../../API/API.cpp ../../CatalogManager/CatalogManager.cpp lex.cpp -o parser  
+
 

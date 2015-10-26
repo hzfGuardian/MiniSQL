@@ -164,6 +164,13 @@ char    {
                 return CHAR;   
         }
 
+null    {
+                finished_state = 0;
+                yylval.pNode = MallocNewNode();
+                yylval.pNode->type=EMPTY;
+                snprintf(yylval.pNode->text,sizeof(yylval.pNode->text),"null");
+                return EMPTY; 
+        }
 
 -?[0-9]+    {   
 				finished_state = 0;

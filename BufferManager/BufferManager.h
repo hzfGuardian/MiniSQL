@@ -21,7 +21,7 @@ class MBuffer{
 		MBuffer(){
 			int i;
 			for(i=0;i<64;i++)
-				Buffer[64]=NULL;
+				Buffer[i]=NULL;
 		};
 		bool Init();
 		Block* GBlock();

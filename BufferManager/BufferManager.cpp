@@ -1,4 +1,5 @@
 #include "Buffermanager.h" 
+
 Block* MBuffer::GBlock()
 {
 	Block* Tmp;

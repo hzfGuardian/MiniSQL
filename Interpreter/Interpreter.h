@@ -21,10 +21,11 @@ public:
         cout << endl << BYE_BYE << endl;
     }
     
-    
-private:
-    
-    
+    void exec()
+    {
+        yyparse();
+    }
+     
 };
 
 

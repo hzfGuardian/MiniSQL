@@ -6,8 +6,7 @@ int main(int argc, const char* argv[])
 {
     Interpreter inter;
 
-    //real deal
-    yyparse();
+    inter.exec();
 
     return 0;
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <list>
 #include <vector>
 #include <iostream>
@@ -20,6 +21,7 @@ using namespace std;
 #define BYE_BYE     "Good Bye. Fuck you next time."
 
 
+#define BLOCK_SIZE 4096
 
 
 //出错信息宏定义
@@ -77,7 +79,7 @@ struct Table
 struct Condition
 {
     string attr_name;	//条件所对应的属性名
-    int op_type;		//条件所用到的比较模式，分别为SMALL,EQUEL,BIG
+    string op_type;		//条件所用到的比较模式，分别为SMALL,EQUEL,BIG
     string cmp_value;	//条件所需要进行比较的值
 };
 typedef list<Condition> Condition_list;
@@ -94,6 +96,7 @@ struct Index
 struct Tuple: public Table
 {
     string attr_values[32];
+
     int length()
     {
         int len = 0;

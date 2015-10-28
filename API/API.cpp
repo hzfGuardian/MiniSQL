@@ -1,6 +1,6 @@
 
-
 #include "API.h"
+#include "../CatalogManager/CatalogManager.h"
 
 using namespace std;
 
@@ -19,7 +19,7 @@ void API_Create_Table(Table& table)
 }
 
 //	删除表时的内部调用
-void API_Drop_Table(string& table_name)
+void API_Drop_Table(string table_name)
 {
     //if drop table succeed
 
@@ -47,7 +47,7 @@ void API_Create_Index(Index& index)
 }
 
 //	删除索引时的内部调用
-void API_Drop_Index(string& index_name)
+void API_Drop_Index(string index_name)
 {
     //if drop table succeed
 
@@ -57,59 +57,66 @@ void API_Drop_Index(string& index_name)
     else {
         cout << ERROR_INDEX_NOT_EXIST << endl;
     }
-
 }
 
-//	读取表信息
-void Read_Table_Info(Table& table)
-{
-    string tableInfo = table.table_name + "_table.info";   
-    ifstream fin;   
-    fin.open(tableInfo.c_str(), ios::in);   
-    table.attr_count = 0;   
-    //读表的信息   
-    char attr_temp[256];   
-    string attr;   
-    while(!fin.eof())   
-    {   
-        fin.getline(attr_temp, 256);   
-        attr = attr_temp;   
-        if(attr == "" && fin.eof())   
-            break;   
-           
-        table.attrs[table.attr_count].attr_name = Get_Word(attr, 1);   
-        parse_to_int(Get_Word(attr, 2), table.attrs[table.attr_count].attr_type);   
-        parse_to_int(Get_Word(attr, 3), table.attrs[table.attr_count].attr_key_type);   
-        parse_to_int(Get_Word(attr, 4), table.attrs[table.attr_count].attr_len);   
-        parse_to_int(Get_Word(attr, 5), table.attrs[table.attr_count].attr_num);   
-           
-        table.attr_count++;   
-    }   
-    fin.close(); 
-}
-
-//	读取索引信息
-void Read_Index(string& index_name)
-{
-    
-}
 
 //	插入纪录时的内部调用
-bool API_Insert()
+void API_Insert(Tuple& tuple)
 {
-    return false;
+    printf("Call insert.\n");
 }
 
 //	选择纪录时的内部调用
-bool API_Select()
+void API_Select(string table_name, Condition_list clist)
 {
-    return false;
+    //get all indices on this table
+    vector<string> index_list;// = Read_Index_Info(table_name);
+    Condition_list::iterator it;
+
+    //divide all conditions into two parts: have index or not have index
+    Condition_list have_index_list, no_index_list;
+    for (it = clist.begin(); it != clist.end(); ++it)
+    {
+        //check whether this attr has index
+        for (int i = 0; i < index_list.size(); ++i)
+        {
+            if (index_list[i] == it->attr_name)
+                have_index_list.push_back(*it);
+            else
+                no_index_list.push_back(*it);
+        }
+    }
+
+    //map: first->key, second->count
+    map<int, int> hash_join_map;
+    map<int, int>::iterator my_Itr;
+    for (it = have_index_list.begin(); it != have_index_list.end(); ++it)
+    {
+        //get offsets
+        vector<int> offsets;// = Find_indices(index_name, it->op_type, it->cmp_value);
+        //hash join
+        for (int i = 0; i < offsets.size(); ++i)
+        {
+            //if not found
+            if (hash_join_map.find(offsets[i]) == hash_join_map.end())
+                hash_join_map[offsets[i]] = 1;
+            else
+                ++hash_join_map[offsets[i]];
+        }
+    }
+
+    for (my_Itr = hash_join_map.begin(); my_Itr != hash_join_map.end(); ++my_Itr) {
+        if (my_Itr->second > 1)
+        {
+            
+        }
+    }
 }
 
 //	删除纪录时的内部调用
-bool API_Delete()
+void API_Delete(string table_name, Condition_list clist)
 {
-    return false;
+    
 }
 
 

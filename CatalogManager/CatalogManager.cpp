@@ -1,4 +1,6 @@
+
 #include "CatalogManager.h"
+#include "../Interpreter/Lex/Analysis.hpp"
 
 bool Create_table(Table table)
 {
@@ -11,7 +13,7 @@ bool Create_table(Table table)
 		cout<<"error: This table has existed!"<<endl;
 		return false;
 	} 
-	cout<< "Before open file: " << table.table_name<<endl;
+
 	out.open("Tablelist.txt",ios::app);
 	out<<table.table_name<<endl;
 	out.close();
@@ -281,4 +283,43 @@ bool Judge_attr_exist(string table_name,string attr_name)
 	}
 	in.close();
 	return flag;
+}
+
+
+Table Read_Table_Info(string table_name)
+{
+	Table table;
+	table.table_name = table_name;
+	table.attr_count = 0;
+	string file_name = table_name + "_table.info";
+	ifstream in;
+	in.open(file_name.c_str(),ios::in);
+	if(!in)
+	{
+		cout << "No such info file!" << endl;
+		return table;
+	}
+	char Info[128];
+	string info;
+	int k=0;
+	int i;
+	while(!in.eof())
+	{
+		in >> table.attrs[k].attr_name;		
+		in >> table.attrs[k].attr_key_type;
+		in >> table.attrs[k].attr_type;
+		in >> table.attrs[k].attr_len;
+		in >> table.attrs[k].attr_id;
+		
+		k++; 		
+	}
+	table.attr_count = k-1;
+	in.close();
+	return table;	
+}
+
+
+string Find_index_name(string table_name, string attr_name)
+{
+	return string("hello");
 }

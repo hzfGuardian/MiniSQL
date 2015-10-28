@@ -24,5 +24,12 @@ bool Judge_index_exist(string index_name);
 
 bool Judge_attr_exist(string table_name, string attr_name);
 
+/*******************************************/
+Table Read_Table_Info(string table_name);
+
+
+string Find_index_name(string table_name, string attr_name);
+
+
 #endif
 

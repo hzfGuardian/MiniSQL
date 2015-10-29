@@ -1,7 +1,7 @@
 
 #include "SQLGrammarTree.h"
 #include "../MiniSQL.h"
-#include "Lex/Analysis.hpp"
+//#include "Lex/Analysis.hpp"
 #include "../API/API.h"
 
 using namespace std;

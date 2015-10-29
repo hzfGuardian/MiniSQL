@@ -10,7 +10,6 @@ bool Create_table(Table table)
 
 	if(exist)
 	{
-		cout<<"error: This table has existed!"<<endl;
 		return false;
 	} 
 
@@ -72,7 +71,6 @@ bool Drop_table(string table_name)
 	bool exist = Judge_table_exist(table_name);
 	if(!exist)
 	{
-		cout<<"No such table!"<<endl;
 		return false;
 	}
 	string table_rec = table_name + "_table.rec";
@@ -319,7 +317,52 @@ Table Read_Table_Info(string table_name)
 }
 
 
-string Find_index_name(string table_name, string attr_name)
+string Find_index_name(string table_name,string attr_name)
 {
-	return string("hello");
+	ifstream in;
+	int i,j,k;
+	bool flag = false;
+	char Index[128];
+	string index;
+	string indexname;
+	string tablename;
+	string attrname;
+	in.open("Indexlist.txt",ios::in);
+	if(!in)
+	{
+		cout<<"No such info file!"<<endl;
+		return "";
+	}
+	while(!in.eof())
+	{	
+		in.getline(Index,128);
+		index = Index;
+		if(index!="")
+		{		
+			index += '\n';
+			i=0;
+			while(index.at(i)!=' ')
+			{
+				i++;
+			}
+			indexname = index.substr(0,i);
+			j=i+1;
+			while(index.at(j)!=' ')
+			{
+				j++;
+			}
+			tablename = index.substr(i+1,j);
+			k=j+1;
+			while(index.at(k)!='\n')
+			{
+				k++;
+			}
+			attrname = index.substr(j+1,k);
+			cout<<tablename<<attrname<<endl;
+			if(tablename == table_name && attrname == attr_name)
+				break; 
+		}
+	}
+	in.close();
+	return indexname; 
 }

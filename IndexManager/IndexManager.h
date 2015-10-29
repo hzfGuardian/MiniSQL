@@ -15,7 +15,7 @@ void Insert_index(string index_name, string value, int offset);
 //
 void Delete_index(string index_name, string value);
 
-int Find_index(string index_name, string value);
+//int Find_index(string index_name, string value);
 
 //
 vector<int> Find_indices(string index_name, string op, string value);

@@ -2,9 +2,7 @@
 #define _BufferManager_H_
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 #include <iostream>
-#define BlockSize 4096
 using namespace std;
 
 struct Block
@@ -27,14 +25,12 @@ class MBuffer{
 		};
 		bool Init();
 		Block* GBlock();
-		Block* GetBlock(string tablename, int offset, int flag);
+		Block* GetBlock(string tablename, int offset);
 	 	bool Sche(string tablename, int offset);
-	 	bool Sche(Block* newblock);
 	 	bool Drop(string tablename);
 	 	Block* Exchange(string tablename, int offset, Block* Repalced);
 		void test(); 
 	 	~MBuffer();
 };
-int Block_num (string file_name);
-#endif 
 
+#endif 

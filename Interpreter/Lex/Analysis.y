@@ -155,7 +155,7 @@ void yyerror(const char *s, ...)
 {
     va_list ap;
     va_start(ap, s);
-    fprintf(stderr, "line %d: error near %s: ", yylineno, yytext);
+    fprintf(stderr, "line %d: error near '%s': ", yylineno, yytext);
     vfprintf(stderr, s, ap);
     fprintf(stderr, "\n");
     va_end(ap);

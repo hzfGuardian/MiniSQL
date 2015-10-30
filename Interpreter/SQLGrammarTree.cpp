@@ -1,17 +1,12 @@
 
 #include "SQLGrammarTree.h"
 #include "../MiniSQL.h"
-#include "Lex/Analysis.hpp"
+//#include "Lex/Analysis.hpp"
 #include "../API/API.h"
 
 using namespace std;
 
-Table tbl;
-Index idx;
-Tuple tuple;
-
 NodeManager node_manager;
-
 
 extern void yyrestart(FILE* fp);
 extern FILE* yyin;
@@ -35,24 +30,17 @@ void ProcessTree(SQLGrammarTree* pNode)
     SQLGrammarTree* current_node = pNode->lpSub;
     switch (current_node->type) {
 
-        case CREATE:
-                       
+        case CREATE:                      
             //move to next node, "table" or "index"
             current_node = current_node->lpNext;
-            
             switch (current_node->type) {
-                
                 //create table
                 case TABLE:
-                    
                     ProcessCreateTable(current_node);
-                    
                     break;
                 
                 case INDEX: //CREATE INDEX NAME ON NAME '(' NAME ')'
-                    
                     ProcessCreateIndex(current_node);
-                    
                     break;
                     
                 default:
@@ -65,16 +53,12 @@ void ProcessTree(SQLGrammarTree* pNode)
             current_node = current_node->lpNext;
             
             switch (current_node->type) {
-                case TABLE:
-                    
+                case TABLE:                    
                     ProcessDropTable(current_node);
-                    
                     break;
                     
                 case INDEX:
-                    
                     ProcessDropIndex(current_node);
-
                     break;
                     
                 default:
@@ -82,29 +66,22 @@ void ProcessTree(SQLGrammarTree* pNode)
             }
             break;
         
-        case INSERT: //INSERT INTO NAME VALUES '(' attr_value_list ')'
-            
+        case INSERT: //INSERT INTO NAME VALUES '(' attr_value_list ')'           
             ProcessInsert(current_node);
-            
             break;
         
         case DELETE:
-            
             ProcessDelete(current_node);
-
             break;
         
         case SELECT:
-            
             ProcessSelect(current_node);
-
             break;
         
         case EXECFILE:
-            
             ProcessExecfile(current_node);
-
             break;
+
         default:
             break;
     }
@@ -185,6 +162,7 @@ void nm_clear()
 
 void ProcessCreateTable(SQLGrammarTree* current_node)
 {
+    Table tbl;
     //primary key
     string primary_key_name = "";
 
@@ -289,6 +267,7 @@ void ProcessCreateTable(SQLGrammarTree* current_node)
 
 void ProcessCreateIndex(SQLGrammarTree* current_node)
 {
+    Index idx;
     //move to next node, "index_name"
     current_node = current_node->lpNext;
     
@@ -332,31 +311,53 @@ void ProcessDropIndex(SQLGrammarTree* current_node)
 
 void ProcessInsert(SQLGrammarTree* current_node)
 {
+    Tuple tuple;
+
     //move to next node, "table name"
     current_node = current_node->lpNext;
     
     //check existence of table
     if(Judge_table_exist(string(current_node->text)) == false) //no exist
     {
-        printf("error: no such table exists: %s.\n", current_node->text);
+        printf("error: table '%s' does not exists\n", current_node->text);
         return;
     }
     //get table name
     tuple.table_name = string(current_node->text);
-    
+
     //move to next node, "attr_value_list"
     current_node = current_node->lpNext;
 
     //read table information
     Table tbl = Read_Table_Info(tuple.table_name);
+    /*
+    cout << tbl.table_name << endl;  //表名
+    cout << tbl.attr_count << endl;  //表中属性的总个数
+    for (int i = 0; i < tbl.attr_count; ++i)
+    {
+        cout << tbl.attrs[i].attr_name << " " << tbl.attrs[i].attr_type << " " << tbl.attrs[i].attr_key_type << " " << tbl.attrs[i].attr_len << " " << tbl.attrs[i].attr_id << endl;
+    }
+    return;
+    */
+
     //get each value
     current_node = current_node->lpSub;
 
+    //assign value for tuple
+    tuple.attr_count = tbl.attr_count;
+    memcpy(tuple.attrs, tbl.attrs, tbl.attr_count * sizeof(Attribute));
+
     vector<int> v;
+    int i = 0;
     while(current_node != NULL) 
     {
         //get attribute list type
-        v.push_back(current_node.type);
+        v.push_back(current_node->type);
+        
+        //get attribute
+        tuple.attr_values[i++] = string(current_node->text);
+
+        //move to next node
         current_node = current_node->lpNext;
     }
 
@@ -373,40 +374,218 @@ void ProcessInsert(SQLGrammarTree* current_node)
         //if input null but it is a primary key
         if (v[i] == EMPTY && tbl.attrs[i].attr_key_type == PRIMARY)
         {
-            printf("error: cannot set null value on primary key: %s.\n", tbl.attrs[i].attr_name.c_str());
+            printf("error: cannot set null value on primary key '%s'\n", tbl.attrs[i].attr_name.c_str());
             return;
         }
 
         //check type matching
         if (v[i] == STRING && tbl.attrs[i].attr_type != CHAR)
         {
-            printf("error: type does not match on attribute: %s.\n", tbl.attrs[i].attr_name.c_str());
+            printf("error: type does not match on attribute: %s\n", tbl.attrs[i].attr_name.c_str());
             return;
         }
-        if(v[i] == INTNUM && tbl.attrs[i].attr_type == STRING)
+        if(v[i] == INTNUM && tbl.attrs[i].attr_type == CHAR)
         {
-            printf("error: type does not match on attribute: %s.\n", tbl.attrs[i].attr_name.c_str());
+            printf("error: type does not match on attribute: %s\n", tbl.attrs[i].attr_name.c_str());
             return;
         }
-        if(v[i] == FLOATNUM && tbl.attrs[i].attr_type == STRING)
+        if(v[i] == FLOATNUM && tbl.attrs[i].attr_type == CHAR)
         {
-            printf("error: type does not match on attribute: %s.\n", tbl.attrs[i].attr_name.c_str());
+            printf("error: type does not match on attribute: %s\n", tbl.attrs[i].attr_name.c_str());
             return;
         }
     }
     
     //real API Insert
-    API_Insert();
+    API_Insert(tuple);
 }
 
-void ProcessDelete(SQLGrammarTree* current_node)
+void ProcessDelete(SQLGrammarTree* current_node) //delete from table_name where a1 > value1 and a2 < value2
 {
+    //move to table_name
+    current_node = current_node->lpNext;
 
+    string table_name = string(current_node->text);
+
+    //check existence of table
+    if(Judge_table_exist(string(current_node->text)) == false) //no exist
+    {
+        printf("error: Table '%s' doesn't exist\n", current_node->text);
+        return;
+    }
+
+    Condition_list clist;
+
+    //delete without condition: delete from table_name;
+    if (current_node->lpNext == NULL) 
+    {
+        API_Delete(table_name, clist);
+        return;
+    }
+
+    //delete with conditions
+    Table tbl = Read_Table_Info(string(current_node->text));
+
+    //get first condition
+    current_node = current_node->lpNext->lpSub;
+
+    //get each condition, NAME COMPARISON real_value
+    while(current_node != NULL) 
+    {
+        //move to son, NAME 
+        SQLGrammarTree* temp_in_cond = current_node->lpSub;
+        //scan the attribute list, check whether the name is in it
+        int i, num;
+        for (i = 0; i < tbl.attr_count; ++i)
+            if (string(temp_in_cond->text) == tbl.attrs[i].attr_name)
+            {
+                num = i; //note the id of attribute
+                break;
+            }
+            
+        //if not found
+        if (i == tbl.attr_count) 
+        {
+            printf("error: Unknown column '%s' in 'where clause'\n", temp_in_cond->text);
+            return;
+        }
+        //if attribute exists
+        
+        //note type of attribute
+        int type = tbl.attrs[num].attr_type;
+        string name = string(temp_in_cond->text);
+        
+        //move to next, COMPARSION
+        temp_in_cond = temp_in_cond->lpNext;
+        
+        //note COMPARSION
+        string op = string(temp_in_cond->text);
+
+        //move to next, VALUE
+        temp_in_cond = temp_in_cond->lpNext;
+
+        if (type == CHAR && temp_in_cond->type != STRING)
+        {
+            printf("error: type does not match on '%s' and '%s'\n", name.c_str(), temp_in_cond->text);
+            return;
+        }
+        if (type == INT && temp_in_cond->type == STRING)
+        {
+            printf("error: type does not match on '%s' and '%s'\n", name.c_str(), temp_in_cond->text);
+            return;
+        }
+        if (type == FLOAT && temp_in_cond->type == STRING)
+        {
+            printf("error: type does not match on '%s' and '%s'\n", name.c_str(), temp_in_cond->text);
+            return;
+        }
+
+        //construct a condition
+        Condition cond;
+        cond.attr_name = name;
+        cond.op_type = op;
+        cond.cmp_value = string(temp_in_cond->text);
+
+        clist.push_back(cond);
+
+        current_node = current_node->lpNext;
+    }
+
+    API_Delete(table_name, clist);
 }
 
 void ProcessSelect(SQLGrammarTree* current_node)
 {
+    //move to table_name
+    current_node = current_node->lpNext;
 
+    string table_name = string(current_node->text);
+
+    //check existence of table
+    if(Judge_table_exist(string(current_node->text)) == false) //no exist
+    {
+        printf("error: Table '%s' doesn't exist\n", current_node->text);
+        return;
+    }
+
+    Condition_list clist;
+
+    //delete without condition: delete from table_name;
+    if (current_node->lpNext == NULL) 
+    {
+        API_Select(table_name, clist);
+        return;
+    }
+
+    //delete with conditions
+    Table tbl = Read_Table_Info(string(current_node->text));
+
+    //get first condition
+    current_node = current_node->lpNext->lpSub;
+
+    //get each condition, NAME COMPARISON real_value
+    while(current_node != NULL) 
+    {
+        //move to son, NAME 
+        SQLGrammarTree* temp_in_cond = current_node->lpSub;
+        //scan the attribute list, check whether the name is in it
+        int i, num;
+        for (i = 0; i < tbl.attr_count; ++i)
+            if (string(temp_in_cond->text) == tbl.attrs[i].attr_name)
+            {
+                num = i; //note the id of attribute
+                break;
+            }
+            
+        //if not found
+        if (i == tbl.attr_count) 
+        {
+            printf("error: Unknown column '%s' in 'where clause'\n", temp_in_cond->text);
+            return;
+        }
+        //if attribute exists
+        
+        //note type of attribute
+        int type = tbl.attrs[num].attr_type;
+        string name = string(temp_in_cond->text);
+        
+        //move to next, COMPARSION
+        temp_in_cond = temp_in_cond->lpNext;
+        
+        //note COMPARSION
+        string op = string(temp_in_cond->text);
+
+        //move to next, VALUE
+        temp_in_cond = temp_in_cond->lpNext;
+
+        if (type == CHAR && temp_in_cond->type != STRING)
+        {
+            printf("error: type does not match on '%s' and '%s'\n", name.c_str(), temp_in_cond->text);
+            return;
+        }
+        if (type == INT && temp_in_cond->type == STRING)
+        {
+            printf("error: type does not match on '%s' and '%s'\n", name.c_str(), temp_in_cond->text);
+            return;
+        }
+        if (type == FLOAT && temp_in_cond->type == STRING)
+        {
+            printf("error: type does not match on '%s' and '%s'\n", name.c_str(), temp_in_cond->text);
+            return;
+        }
+
+        //construct a condition
+        Condition cond;
+        cond.attr_name = name;
+        cond.op_type = op;
+        cond.cmp_value = string(temp_in_cond->text);
+
+        clist.push_back(cond);
+
+        current_node = current_node->lpNext;
+    }
+
+    API_Select(table_name, clist);
 }
 
 void ProcessExecfile(SQLGrammarTree* current_node)

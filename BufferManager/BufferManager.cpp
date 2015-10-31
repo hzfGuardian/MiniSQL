@@ -1,4 +1,5 @@
 #include "BufferManager.h" 
+
 Block* MBuffer::GBlock()
 {
 	Block* Tmp;
@@ -37,10 +38,9 @@ Block* MBuffer::GetBlock(string tablename, int offset, int flag)
 			return Target;
 		}
 	}
-	
 	if(flag == 0)
-	{ 
-		if(Sche(tablename,offset))
+	{ 	
+		if(Sche1(tablename,offset))
 		{
 			for(i=0;i<64;i++)
 			{
@@ -55,57 +55,84 @@ Block* MBuffer::GetBlock(string tablename, int offset, int flag)
 	} 
 	else
 	{
-		Target = GBlock();
-		Target->tablename = tablename;
-		Target->accessed = true;
-		Target->written = true;
-		Target->offset = offset;
-		Sche(Target);
-		return Target;
+		if(Sche2(tablename,offset))
+		{
+			for(i=0;i<64;i++)
+			{
+				Target = Buffer[i];
+				if(Target->tablename == tablename && Target->offset == offset)
+				{
+					Target->accessed = true;
+					return Target;
+				}
+			}
+		}
 	} 
 	return NULL;
 }
 
-bool MBuffer::Sche(string tablename, int offset)
+bool MBuffer::Sche1(string tablename, int offset)
 {
 	int i = 0;
-	Block* Target;
-	while(1)
+	for(i=0;i<64;i++)
 	{
-		Target = Buffer[i];
-		if(Target->accessed == false)
-			break;
-		else
-			Buffer[i]->accessed = false;
-		i++;
-		if(i == 64)
-			i = 0;	
+		if(Buffer[i]->tablename == "")
+		{
+			break;			
+		}
 	}
-	Buffer[i] = Exchange(tablename, offset, Target);
+	if(i==64)
+	{
+		i = 0; 
+		while(1)
+		{
+			if(Buffer[i]->accessed == false)
+				break;
+			else
+				Buffer[i]->accessed = false;
+			i++;
+			if(i == 64)
+				i = 0;	
+		}
+	}
+	Exchange(tablename, offset, Buffer[i]);
 	if(Buffer[i] != NULL)
 		return true;
 	else 
 		return false;
 }
 
-bool MBuffer::Sche(Block* newblock)
+bool MBuffer::Sche2(string tablename, int offset)
 {
 	int i = 0;
-	Block* Target;
-	while(1)
+	for(i=0;i<64;i++)
 	{
-		Target = Buffer[i];
-		if(Target->accessed == false)
-			break;
-		else
-			Buffer[i]->accessed = false;
-		i++;
-		if(i == 64)
-			i = 0;	
+		if(Buffer[i]->tablename == "")
+		{
+			break;		
+		}
+	}
+	if(i==64)
+	{
+		i = 0;
+		while(1)
+		{
+			if(Buffer[i]->accessed == false)
+				break;
+			else
+				Buffer[i]->accessed = false;
+			i++;
+			if(i == 64)
+				i = 0;	
+		}
 	}
 	Exchange("",-1,Buffer[i]);
-	Buffer[i] = newblock;
-	Exchange("",-1,newblock);
+	Buffer[i]->tablename = tablename;
+	Buffer[i]->accessed = true;
+	Buffer[i]->written = true;
+	Buffer[i]->offset = offset;
+	memset(Buffer[i]->record,0,BlockSize);
+	Exchange("",-1,Buffer[i]);
 	if(Buffer[i] != NULL)
 		return true;
 	else 
@@ -131,7 +158,7 @@ bool MBuffer::Drop(string tablename)
 	return true;
 }
 
-Block*  MBuffer::Exchange(string tablename, int offset, Block* Replaced)
+bool  MBuffer::Exchange(string tablename, int offset, Block* Replaced)
 {	
 	FILE* fp;
 	int i;
@@ -141,7 +168,6 @@ Block*  MBuffer::Exchange(string tablename, int offset, Block* Replaced)
 	length = Replaced->tablename.size();
 	if(length!=0)
 	{
-		cout<<"ok"<<endl;
 		for(i=0;i<length;i++)
 		{
 			Filename[i] = Replaced->tablename.at(i);
@@ -149,7 +175,7 @@ Block*  MBuffer::Exchange(string tablename, int offset, Block* Replaced)
 		if((fp = fopen(Filename,"rb+"))==NULL)
 		{
 			cout<<"Writing data error!"<<endl;
-			return NULL;
+			return false;
 		} 
 		fseek(fp,BlockSize*Replaced->offset,SEEK_SET);
 		fwrite(Replaced->record,BlockSize,1,fp);
@@ -166,19 +192,18 @@ Block*  MBuffer::Exchange(string tablename, int offset, Block* Replaced)
 		if((fp = fopen(Filename,"rb"))==NULL)
 		{
 			cout<<"Reading data error!"<<endl;
-			return NULL;
+			return false;
 		} 
-		Block* Target = GBlock(); 
 		fseek(fp,BlockSize*offset,SEEK_SET);
-		fread(Target->record,BlockSize,1,fp);		
+		fread(Replaced->record,BlockSize,1,fp);		
 		fclose(fp);
-		Target->offset = offset;
-		Target->accessed = true;
-		Target->tablename = tablename;
-		return Target;
+		Replaced->offset = offset;
+		Replaced->accessed = true;
+		Replaced->tablename = tablename;
+		return true;
 	}
 	else
-		return NULL;
+		return true;
 }
  
 MBuffer::~MBuffer()
@@ -191,10 +216,8 @@ MBuffer::~MBuffer()
 		
 		if(Target!=NULL)
 		{
-			//cout<<"w"<<endl;
 			if(Target->tablename != "")
-				{cout<<Target->tablename<<endl;
-				Exchange("",-1,Target);}
+				Exchange("",-1,Target);
 			delete Target->record;
 			delete Target;
 		}
@@ -216,7 +239,6 @@ int Block_num(string file_name)
 	FILE *fp;
 	fp = fopen(file_name.c_str(),"r");
 	fseek(fp, 0, 2);  
-	cout<<ftell(fp)<<endl;
     num = ftell(fp)/BlockSize;  
     fclose(fp);
     return num;

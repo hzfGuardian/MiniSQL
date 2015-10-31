@@ -2,7 +2,6 @@
 #define _CatalogManager_h_
 
 #include "../MiniSQL.h"
-#include <fstream>
 using namespace std;
 
 
@@ -28,6 +27,9 @@ bool Judge_attr_exist(string table_name, string attr_name);
 Table Read_Table_Info(string table_name);
 
 string Find_index_name(string table_name,string attr_name);
+
+/********************************************/
+bool Create_Index_File(string index_name);
 
 
 #endif

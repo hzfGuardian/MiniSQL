@@ -40,13 +40,13 @@ bool Create_index(Index index)
 	bool exist = Judge_index_exist(index.index_name);
 	if(exist)
 	{
-		cout<<"The index has existed!"<<endl;
+		printf("Index '%s' exists\n", index.index_name.c_str());
 		return false;
 	}
 	exist = Judge_table_exist(index.table_name);
 	if(!exist)
 	{
-		cout<<"No such table!"<<endl;
+		printf("Table '%s' doesn't exist\n", index.table_name.c_str());
 		return false;
 	}
 	exist = Judge_attr_exist(index.table_name, index.attr_name);
@@ -111,7 +111,6 @@ bool Drop_index(string index_name)
 	bool exist = Judge_index_exist(index_name);
 	if(!exist)
 	{
-		cout<<"No such index!"<<endl;
 		return false;
 	}
 	string index_rec = index_name + "_index.rec";
@@ -366,3 +365,40 @@ string Find_index_name(string table_name,string attr_name)
 	in.close();
 	return indexname; 
 }
+
+bool Create_Index_File(string index_name)
+{
+	ifstream in;
+	ofstream out;
+	//test whether index file already exist
+	in.open(index_name.c_str(), ios::in);
+	if (in)	{
+		printf("error: lose a primary index\n");
+		return false;
+	}
+	else
+	{
+		//close the file
+		in.close();
+		//open the file "out"
+		out.open(index_name.c_str(), ios::out);
+		//if successfully to create file
+		if (out)
+		{
+			//success
+			out.close();
+			return true;
+		}
+		else
+		{
+			printf("error: accident fault\n");
+			return false;
+		}
+	}
+}
+
+
+
+
+
+

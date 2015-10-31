@@ -4,7 +4,16 @@
 #include "../BufferManager/BufferManager.h"
 #include "../MiniSQL.h"
 
-bool Insert(Tuple& tuple);
+
+int Insert(Tuple &tuple);
+
 char* Convertvalue(Tuple &tuple); 
+
+
+bool Delete_tuple(vector<int> offsetlist, Table table, Condition_list list);
+
+
+bool Select_tuple(vector<int> offsetlist, Table table, Condition_list list);
+
 
 #endif

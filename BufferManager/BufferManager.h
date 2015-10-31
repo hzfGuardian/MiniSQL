@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <iostream>
+#include <list>
 #define BlockSize 35
 using namespace std;
 
@@ -29,10 +30,10 @@ class MBuffer{
 		bool Init();
 		Block* GBlock();
 		Block* GetBlock(string tablename, int offset, int flag);
-	 	bool Sche(string tablename, int offset);
-	 	bool Sche(Block* newblock);
+	 	bool Sche1(string tablename, int offset);
+	 	bool Sche2(string tablename, int offset);
 	 	bool Drop(string tablename);
-	 	Block* Exchange(string tablename, int offset, Block* Repalced);
+	 	bool Exchange(string tablename, int offset, Block* Repalced);
 		void test(); 
 	 	~MBuffer();
 };

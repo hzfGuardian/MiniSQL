@@ -218,8 +218,7 @@ void ProcessCreateTable(SQLGrammarTree* current_node)
             
             //if char(-1), return error
             if (tbl.attrs[tbl.attr_count].attr_len <= 0) {
-                printf(ERROR_CHAR_INDEX_LESS_ZERO);
-                printf("\n");
+                printf("error: SQL syntax wrong near '%d))'", tbl.attrs[tbl.attr_count].attr_len);
                 return;
             }
             
@@ -330,16 +329,7 @@ void ProcessInsert(SQLGrammarTree* current_node)
 
     //read table information
     Table tbl = Read_Table_Info(tuple.table_name);
-    /*
-    cout << tbl.table_name << endl;  //表名
-    cout << tbl.attr_count << endl;  //表中属性的总个数
-    for (int i = 0; i < tbl.attr_count; ++i)
-    {
-        cout << tbl.attrs[i].attr_name << " " << tbl.attrs[i].attr_type << " " << tbl.attrs[i].attr_key_type << " " << tbl.attrs[i].attr_len << " " << tbl.attrs[i].attr_id << endl;
-    }
-    return;
-    */
-
+    
     //get each value
     current_node = current_node->lpSub;
 
@@ -604,7 +594,7 @@ void ProcessExecfile(SQLGrammarTree* current_node)
         }
         else
         {
-            printf("error: no such SQL script file exists: %s\n", current_node->text);
+            printf("error: no such SQL script '%s' exists\n", current_node->text);
             return;
         }
     }

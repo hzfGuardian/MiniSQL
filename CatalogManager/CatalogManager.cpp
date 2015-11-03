@@ -38,6 +38,7 @@ bool Create_table(Table table)
 bool Create_index(Index index)
 {
 	bool exist = Judge_index_exist(index.index_name);
+
 	if(exist)
 	{
 		printf("Index '%s' exists\n", index.index_name.c_str());

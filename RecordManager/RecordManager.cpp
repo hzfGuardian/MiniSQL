@@ -6,6 +6,8 @@ MBuffer mybuffer;
 int delete_num;
 int select_num;
 
+std::vector<int> select_offsets;
+
 char* Convertvalue(Tuple &tuple)
 {
 	string value = "";
@@ -416,6 +418,7 @@ bool Select_tuple(vector<int> offsetlist, Table table, Condition_list list)
 	string tuplevalue;
 	string file_name = table.table_name + "_table.rec";
 	select_values.clear();
+	select_offsets.clear();
 	if(offsetlist.empty()==1)
 	{
 		Blocknum = Block_num(file_name);			
@@ -600,7 +603,8 @@ bool Select_tuple(vector<int> offsetlist, Table table, Condition_list list)
 								delete t;
 							}
 						}
-						select_values.push_back(tuplevalue);						
+						select_values.push_back(tuplevalue);
+						select_offsets.push_back(offset);						
 					}
 				}				
 			}

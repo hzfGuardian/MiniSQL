@@ -12,6 +12,8 @@ extern vector<string> select_values;
 extern int delete_num;
 extern int select_num;
 
+extern vector<int> select_offsets;
+
 //	创建表时的内部调用
 void API_Create_Table(Table& table)
 {
@@ -36,6 +38,7 @@ void API_Create_Table(Table& table)
         //catalog create index
         Create_index(idx);
 
+        printf("%d\n", table.attrs[id].attr_type - INT);
         //index manager create index
         Create_index(idx.index_name, table.attrs[id].attr_type - INT);
 
@@ -51,6 +54,8 @@ void API_Drop_Table(string table_name)
 {
     //if drop table succeed
     if (Drop_table(table_name)) {
+        //delete index
+
         printf("Query OK, 0 rows affected.\n");
     }
     else {
@@ -61,7 +66,7 @@ void API_Drop_Table(string table_name)
 //	创建索引时的内部调用
 void API_Create_Index(Index& index)
 {
-
+    //记得先检查primary key 
     if (Create_index(index)) {
         //real create index(call IndexManager)
 
@@ -71,7 +76,18 @@ void API_Create_Index(Index& index)
 
         Select_tuple(offsetlist, Read_Table_Info(index.table_name), list);
 
-        //Create_index(vector<Value_offset> values, string index_name, int attr_type);//------------------------------------------------------------------------///
+        //挑出一列：select出来的tuple里面对应于index.attr_name的value
+        Table tbl = Read_Table_Info(index.table_name);
+        vector<Value_offset> values;
+        for (int i = 0; i < tbl.attr_count; ++i)
+        {
+            if ()
+            {
+                
+            }
+        }
+
+        Create_index(vector<Value_offset> values, string index_name, int attr_type);//------------------------------------------------------------------------///
     }
     
 }

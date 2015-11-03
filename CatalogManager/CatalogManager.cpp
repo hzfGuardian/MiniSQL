@@ -14,6 +14,7 @@ bool Create_table(Table table)
 	} 
 
 	out.open("Tablelist.txt",ios::app);
+
 	out<<table.table_name<<endl;
 	out.close();
 	
@@ -37,23 +38,24 @@ bool Create_table(Table table)
 
 bool Create_index(Index index)
 {
-	bool exist = Judge_index_exist(index.index_name);
 
+	bool exist = Judge_index_exist(index.index_name);
+	
 	if(exist)
 	{
-		printf("Index '%s' exists\n", index.index_name.c_str());
+		printf("error: Index '%s' exists\n", index.index_name.c_str());
 		return false;
 	}
 	exist = Judge_table_exist(index.table_name);
 	if(!exist)
 	{
-		printf("Table '%s' doesn't exist\n", index.table_name.c_str());
+		printf("error: Table '%s' doesn't exist\n", index.table_name.c_str());
 		return false;
 	}
 	exist = Judge_attr_exist(index.table_name, index.attr_name);
 	if(!exist)
 	{
-		cout<<"No such attr in the table!"<<endl;
+        printf("error: attribute '%s' does not exists in the table", index.attr_name.c_str());
 		return false;
 	}
 	ofstream out;
@@ -101,7 +103,7 @@ bool Drop_table(string table_name)
 	
 	remove("Tablelist.txt");
 	ofstream out;
-	out.open("Tablelist.txt",ios::app);
+	out.open("Tablelist.txt", ios::app);
 	out<<table_list;
 	out.close();
 	return true; 
@@ -198,8 +200,13 @@ bool Judge_table_exist(string table_name)
 	char Table_name[32];
 	string tablename;
 
-	//system("pwd");
 	in.open("Tablelist.txt", ios::in);
+    
+    if (!in) {
+        ofstream out;
+        out.open("Tablelist.txt", ios::out);
+        return false;
+    }
 
 	while(!in.eof())
 	{
@@ -225,6 +232,13 @@ bool Judge_index_exist(string index_name)
 	char index[128];
 	string indexname;
 	in.open("Indexlist.txt",ios::in);
+    
+    if (!in) {
+        ofstream out;
+        out.open("Indexlist.txt", ios::out);
+        return false;
+    }
+    
 	while(!in.eof())
 	{
 		in.getline(index,128);
@@ -292,15 +306,15 @@ Table Read_Table_Info(string table_name)
 	string file_name = table_name + "_table.info";
 	ifstream in;
 	in.open(file_name.c_str(),ios::in);
+    
 	if(!in)
 	{
-		cout << "No such info file!" << endl;
 		return table;
 	}
-	char Info[128];
+
 	string info;
 	int k=0;
-	int i;
+
 	while(!in.eof())
 	{
 		in >> table.attrs[k].attr_name;		
@@ -321,10 +335,10 @@ string Find_index_name(string table_name,string attr_name)
 {
 	ifstream in;
 	int i,j,k;
-	bool flag = false;
+
 	char Index[128];
 	string index;
-	string indexname;
+	string indexname = "";
 	string tablename;
 	string attrname;
 	in.open("Indexlist.txt",ios::in);
@@ -351,51 +365,21 @@ string Find_index_name(string table_name,string attr_name)
 			{
 				j++;
 			}
-			tablename = index.substr(i+1,j);
+			tablename = index.substr(i+1,j-i-1);
 			k=j+1;
 			while(index.at(k)!='\n')
 			{
 				k++;
 			}
-			attrname = index.substr(j+1,k);
-			cout<<tablename<<attrname<<endl;
+			attrname = index.substr(j+1,k-j-1);
+			//cout<<tablename<<attrname<<endl;
 			if(tablename == table_name && attrname == attr_name)
-				break; 
+				break;
+            indexname = "";
 		}
 	}
 	in.close();
 	return indexname; 
-}
-
-bool Create_Index_File(string index_name)
-{
-	ifstream in;
-	ofstream out;
-	//test whether index file already exist
-	in.open(index_name.c_str(), ios::in);
-	if (in)	{
-		printf("error: lose a primary index\n");
-		return false;
-	}
-	else
-	{
-		//close the file
-		in.close();
-		//open the file "out"
-		out.open(index_name.c_str(), ios::out);
-		//if successfully to create file
-		if (out)
-		{
-			//success
-			out.close();
-			return true;
-		}
-		else
-		{
-			printf("error: accident fault\n");
-			return false;
-		}
-	}
 }
 
 

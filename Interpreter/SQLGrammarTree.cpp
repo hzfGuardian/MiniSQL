@@ -1,7 +1,6 @@
 
 #include "SQLGrammarTree.h"
 #include "../MiniSQL.h"
-//#include "Lex/Analysis.hpp"
 #include "../API/API.h"
 
 using namespace std;
@@ -238,7 +237,7 @@ void ProcessCreateTable(SQLGrammarTree* current_node)
     }
 
     //check whether primary key legal
-    int primary_id;
+    int primary_id = -1;
     if(primary_key_name != "") {
         bool exist = false;
         for (int i = 0; i < tbl.attr_count; ++i)
@@ -250,7 +249,7 @@ void ProcessCreateTable(SQLGrammarTree* current_node)
         }
         if (exist == false)
         {
-            printf("error: illegal primary key %s.\n", primary_key_name.c_str());
+            printf("error: illegal primary key '%s'\n", primary_key_name.c_str());
             return;
         }
         else
@@ -284,6 +283,20 @@ void ProcessCreateIndex(SQLGrammarTree* current_node)
     
     //assign attr_name value
     idx.attr_name = string(current_node->text);
+    
+    //check idx legal
+    Table tbl = Read_Table_Info(idx.table_name);
+    int i;
+    for (i = 0; i < tbl.attr_count; i++) {
+        if (tbl.attrs[i].attr_name == idx.attr_name) {
+            break;
+        }
+    }
+    //if attribute has not existed in table
+    if (i == tbl.attr_count) {
+        printf("error: Key column '%s' doesn't exist in table\n", idx.attr_name.c_str());
+        return;
+    }
     
     //call API to create index
     API_Create_Index(idx);

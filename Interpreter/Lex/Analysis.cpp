@@ -1394,7 +1394,7 @@ yyreduce:
 
   case 16:
 #line 104 "Analysis.y" /* yacc.c:1646  */
-    {nm_clear();	printf("Bye. Fuck you next time.\n");	exit(0);}
+    {nm_clear();	printf("Bye. See you next time.\n");	exit(0);}
 #line 1399 "Analysis.cpp" /* yacc.c:1646  */
     break;
 

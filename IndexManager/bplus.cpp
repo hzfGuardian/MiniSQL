@@ -381,7 +381,6 @@ int find1(int root,string s,string filename){
 	} 
 	int q=tree->getOffset(i);
 	delete tree;
-	tree=NULL;
 	return q;
 }
 

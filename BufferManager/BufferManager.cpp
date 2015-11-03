@@ -1,5 +1,6 @@
 #include "BufferManager.h" 
 
+
 Block* MBuffer::GBlock()
 {
 	Block* Tmp;
@@ -32,7 +33,8 @@ Block* MBuffer::GetBlock(string tablename, int offset, int flag)
 	for(i=0;i<64;i++)
 	{
 		Target = Buffer[i];
-		if(Target->tablename == tablename && Target->offset == offset)
+        //printf("%s %s\n", Target->tablename.c_str(), tablename.c_str());
+        if(Target->tablename == tablename && Target->offset == offset)
 		{
 			Target->accessed = true;
 			return Target;

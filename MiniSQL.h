@@ -20,7 +20,7 @@ using namespace std;
 #define WELCOME     "Welcome to the minisql system. Hope you have a good day."
 #define PROMPT      "\nminisql> "
 #define ENTER_SIGN  "      -> "
-#define BYE_BYE     "Good Bye. Fuck you next time."
+#define BYE_BYE     "Good Bye. See you next time."
 
 
 //	用于描述表中一个属性在表中的具体信息
@@ -43,7 +43,7 @@ struct Table
     int getPrimaryKeyId() {
         for (int i = 0; i < attr_count; ++i)
         {
-            if (attrs[i].attr_type == PRIMARY)
+            if (attrs[i].attr_key_type == PRIMARY)
             {
                 return i;
             }

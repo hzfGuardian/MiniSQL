@@ -6,7 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <list>
-#define BlockSize 35
+#define BlockSize 4096
 using namespace std;
 
 struct Block
@@ -26,6 +26,7 @@ class MBuffer{
 			int i;
 			for(i=0;i<64;i++)
 				Buffer[i]=NULL;
+				
 		};
 		bool Init();
 		Block* GBlock();

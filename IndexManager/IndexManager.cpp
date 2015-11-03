@@ -133,7 +133,3 @@ void disre(node *p,int q,string filename)
 }
 
 
-
-
-
-

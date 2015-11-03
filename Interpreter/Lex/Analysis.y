@@ -101,7 +101,7 @@ stmt: CREATE TABLE NAME '(' attr_info ')'	{$$=NewFatherAddSon(STMT, 4, $1, $2, $
 
 |	EXECFILE NAME       					{$$=NewFatherAddSon(STMT, 2, $1, $2);}
 
-|	QUIT									{nm_clear();	printf("Bye. Fuck you next time.\n");	exit(0);}
+|	QUIT									{nm_clear();	printf("Bye. See you next time.\n");	exit(0);}
 
 ;
 

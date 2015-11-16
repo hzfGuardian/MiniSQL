@@ -1,6 +1,10 @@
 
 #include "CatalogManager.h"
+#include "../BufferManager/BufferManager.h"
 #include "../Interpreter/Lex/Analysis.hpp"
+
+extern MBuffer m1;
+extern MBuffer mybuffer;
 
 bool Create_table(Table table)
 {
@@ -81,6 +85,9 @@ bool Drop_table(string table_name)
 	string table_info = table_name + "_table.info";
 	remove(table_info.c_str());
 	
+    m1.clearBuffer();
+    mybuffer.clearBuffer();
+    
 	string table_list = "";
 	char Table_name[32];
 	string tablename;
@@ -117,7 +124,11 @@ bool Drop_index(string index_name)
 		return false;
 	}
 	string index_rec = index_name + "_index.rec";
-	remove(index_rec.c_str()); 
+	remove(index_rec.c_str());
+    
+    //-----------------------------
+    m1.clearBuffer();
+    mybuffer.clearBuffer();
 	
 	string index_list = "";
 	char Index_name[128];
@@ -372,7 +383,7 @@ string Find_index_name(string table_name,string attr_name)
 				k++;
 			}
 			attrname = index.substr(j+1,k-j-1);
-			//cout<<tablename<<attrname<<endl;
+
 			if(tablename == table_name && attrname == attr_name)
 				break;
             indexname = "";

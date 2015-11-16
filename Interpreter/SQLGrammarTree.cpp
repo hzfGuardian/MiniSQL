@@ -10,6 +10,10 @@ NodeManager node_manager;
 extern void yyrestart(FILE* fp);
 extern FILE* yyin;
 
+
+long start_t, end_t;
+double running_time;
+
 //以下为语法树外部函数
 
 SQLGrammarTree* MallocNewNode()
@@ -26,6 +30,8 @@ SQLGrammarTree* MallocNewNode()
 
 void ProcessTree(SQLGrammarTree* pNode)
 {
+    //start_t = clock();
+    //printf("%ld\n", start_t);
     SQLGrammarTree* current_node = pNode->lpSub;
     switch (current_node->type) {
 
@@ -84,8 +90,9 @@ void ProcessTree(SQLGrammarTree* pNode)
         default:
             break;
     }
-    
-    printf("Info: done.\n");
+    //end_t = clock();
+    //printf("%ld\n", end_t);
+    //printf("(done in %.2f sec)\n", calculate_time(start_t, end_t));
 }
 
 SQLGrammarTree* FatherAddSon(SQLGrammarTree* pFather, SQLGrammarTree* pSon)

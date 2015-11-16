@@ -4,6 +4,7 @@
 #include "../RecordManager/RecordManager.h"
 #include "../CatalogManager/CatalogManager.h"
 #include "../IndexManager/IndexManager.h"
+#include <ctime>
 
 using namespace std;
 
@@ -35,3 +36,6 @@ vector<string> split(string str, string pattern);
 
 //画表函数
 void API_Draw_result(Table& tbl);
+
+//测时函数
+double calculate_time(long start, long end);

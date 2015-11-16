@@ -176,7 +176,7 @@ bool  MBuffer::Exchange(string tablename, int offset, Block* Replaced)
 		}
 		if((fp = fopen(Filename,"rb+"))==NULL)
 		{
-			cout<<"Writing data error!"<<endl;
+            //cout<<"Writing data error!"<<endl;
 			return false;
 		} 
 		fseek(fp,BlockSize*Replaced->offset,SEEK_SET);
@@ -225,16 +225,30 @@ MBuffer::~MBuffer()
 		}
 	}
 }
-void MBuffer::test(){
-	int i;
-//	for(i=0;i<64;i++)
-//	{
-		printf("%s",Buffer[0]->record);
-//	}
-//if(Buffer[1]->record[10]==0)
-//cout<<"ok"<<endl;
-	
+
+void MBuffer::clearBuffer()
+{
+    Block* Target;
+    int i;
+    for(i=0;i<64;i++)
+    {
+        Target=Buffer[i];
+        
+        if(Target!=NULL)
+        {
+            if(Target->tablename != "")
+                Exchange("",-1,Target);
+        }
+
+        //real clear buffer
+        memset(Buffer[i]->record,0,BlockSize);
+        Buffer[i]->tablename = "";
+        Buffer[i]->offset = 0;
+        Buffer[i]->accessed = false;
+        Buffer[i]->written = false;
+    }
 }
+
 int Block_num(string file_name)
 {
 	int num = 0;

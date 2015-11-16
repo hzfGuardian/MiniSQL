@@ -3,16 +3,13 @@
 
 using namespace std;
 
-extern string delete_values[32];
+extern string delete_values[32]; 
 extern vector<string> select_values;
 
 extern int delete_num;
 extern int select_num;
 
 extern vector<int> select_offsets;
-extern MBuffer m1;
-
-
 
 
 
@@ -55,7 +52,7 @@ void API_Create_Table(Table& table)
     }
     else {
         printf("error: Table '%s' already exists\n", table.table_name.c_str());
-    }
+    }   
 }
 
 //	删除表时的内部调用
@@ -80,6 +77,9 @@ void API_Drop_Table(string table_name)
     if (Drop_table(table_name)) {
         printf("Query OK, 0 rows affected.\n");
     }
+    else {
+        printf("error: Table '%s' does not exists", table_name.c_str());
+    }
 }
 
 
@@ -93,10 +93,9 @@ void API_Drop_Table(string table_name)
 //	创建索引时的内部调用
 void API_Create_Index(Index& index)
 {
-    
     if (Create_index(index)) {
         //real create index(call IndexManager)
-        
+
         //first select
         vector<int> offsetlist; //null
         Condition_list list;    //null
@@ -135,10 +134,9 @@ void API_Create_Index(Index& index)
 void API_Drop_Index(string index_name)
 {
     //if drop table succeed
-    
     //catalog drop index
     if (Drop_index(index_name)) {
-        printf("Query OK.\n");
+        printf("Query OK. 0 rows affected\n");
     }
     else {
         printf("error: Index '%s' not exists\n", index_name.c_str());
@@ -161,10 +159,10 @@ void API_Insert(Tuple& tuple)
     {
         //调整char型数据，不足的末尾补全空格，超出的截断
         if (tuple.attrs[i].attr_type == CHAR)
-        {
+        {          
             int default_len = tuple.attrs[i].attr_len;
             int input_len = tuple.attr_values[i].length();
-            
+
             //长度不足，补全空格
             if (input_len < default_len)
             {
@@ -178,7 +176,7 @@ void API_Insert(Tuple& tuple)
             }
         }
     }
-    
+
     //预检查，处理含有索引项
     for (int i = 0; i < tuple.attr_count; ++i)
     {
@@ -218,7 +216,7 @@ void API_Insert(Tuple& tuple)
     //insert成功
     int offset = Insert(tuple);
     if (offset != -1) {
-        
+
         //将插入记录中涉及到index的内容插入B+树
         for (int i = 0; i < tuple.attr_count; ++i)
         {
@@ -228,7 +226,7 @@ void API_Insert(Tuple& tuple)
                 //void Insert_index(string index_name, string value, int offset);
                 Insert_index(index_name+"_index.rec", tuple.attr_values[i], offset);
             }
-        }
+        }        
         
         printf("Query OK, 1 row affected\n");
     }
@@ -249,12 +247,13 @@ void API_Insert(Tuple& tuple)
 //	选择纪录时的内部调用
 void API_Select(string table_name, Condition_list clist)
 {
+    
     //create iterator
     Condition_list::iterator it;
-    
+
     //divide all conditions into two parts: have index or not have index
     Condition_list have_index_list, no_index_list;
-    
+
     Table tbl = Read_Table_Info(table_name);
     
     //记得补全char结尾的空格
@@ -282,7 +281,7 @@ void API_Select(string table_name, Condition_list clist)
             }
         }
     }
-    
+
     //traversal condition list
     for (it = clist.begin(); it != clist.end(); ++it)
     {
@@ -316,7 +315,7 @@ void API_Select(string table_name, Condition_list clist)
         }
         return;
     }
-    
+
     //we always do this: vd <- va intersects vb, va <- vd
     it = have_index_list.begin();
     index_name = Find_index_name(table_name, it->attr_name);
@@ -327,13 +326,13 @@ void API_Select(string table_name, Condition_list clist)
     v_d.erase( unique(v_d.begin(), v_d.end() ), v_d.end() );
     
     for (++it; it != have_index_list.end(); ++it) {
-        index_name = Find_index_name(table_name, it->attr_name);
+        index_name = Find_index_name(table_name, it->attr_name);       
         v_b = Find_indices(index_name+"_index.rec", it->op_type, it->cmp_value);
         v_a = v_d;
         //intersection
         sort(v_a.begin(), v_a.end());
         sort(v_b.begin(), v_b.end());
-        
+
         v_d.resize(v_a.size()+v_b.size());
         my_Iter = set_intersection(v_a.begin(), v_a.end(), v_b.begin(), v_b.end(), v_d.begin());
         v_d.resize(my_Iter - v_d.begin());
@@ -378,6 +377,7 @@ void API_Select(string table_name, Condition_list clist)
 //	删除纪录时的内部调用
 void API_Delete(string table_name, Condition_list clist)
 {
+    
     //create iterator
     Condition_list::iterator it;
     
@@ -411,7 +411,7 @@ void API_Delete(string table_name, Condition_list clist)
             }
         }
     }
-    
+
     
     //traversal condition list
     for (it = clist.begin(); it != clist.end(); ++it)
@@ -454,7 +454,6 @@ void API_Delete(string table_name, Condition_list clist)
         //前往删除相应索引值
         goto Final_Delete;
         
-        return;
     }
     
     //we always do this: vd <- va intersects vb, va <- vd
@@ -486,7 +485,7 @@ void API_Delete(string table_name, Condition_list clist)
     
     //作完交集后若v_d为空，说明没有符合条件的记录，直接返回
     if (v_d.empty()) {
-        printf("Query OK, 0 rows affected\n");
+        printf("Empty set\n");
         return;
     }
     
@@ -502,13 +501,14 @@ void API_Delete(string table_name, Condition_list clist)
     Delete_tuple(v_d, tbl, clist);
     
     //反馈删除行数
-    printf("Query OK, %d rows affected\n", delete_num);
+    printf("Query OK, %d rows affected \n", delete_num);
     
     //若未删除任何记录，直接返回，不用处理index
     if (delete_num == 0) {
+        printf("Empty set\n");
         return;
     }
-    
+
 Final_Delete:
     //遍历该表的attribute，找value，找index_name，delete
     for (int i = 0; i < tbl.attr_count; i++) {
@@ -517,7 +517,7 @@ Final_Delete:
         
         //index_name
         string index_name = Find_index_name(table_name, tbl.attrs[i].attr_name);
-        
+
         //先确定属性有无索引, 无索引则直接进入下一循环
         if (index_name == "") {
             continue;
@@ -618,24 +618,25 @@ void API_Draw_result(Table& tbl)
     }
     
     //先画分割线，属性名，分割线
-    cout << div_line << endl;
+    printf("%s\n", div_line.c_str());
     
     for (int i = 0; i < tbl.attr_count; i++) {
         
         //先画"| "
-        cout << "| ";
+        printf("| ");
         
         //输出属性名
         cout << tbl.attrs[i].attr_name;
         
         //输出足够的填补空格
         for (int j = tbl.attrs[i].attr_name.length() + 1; j < col_width[i]; j++) {
-            cout << " ";
+            printf(" ");
         }
-        
+
     }
-    cout << "|" << endl;
-    cout << div_line << endl;
+    printf("|\n");
+
+    printf("%s\n", div_line.c_str());
     
     //按行，画属性值
     for (vector<string>::iterator it = select_values.begin(); it != select_values.end(); it++) {
@@ -646,24 +647,27 @@ void API_Draw_result(Table& tbl)
         for (int i = 0; i < tbl.attr_count; i++) {
             
             //先画"| "
-            cout << "| ";
+            printf("| ");
             
             //输出属性名
-            cout << vs[i];
+            printf("%s", vs[i].c_str());
             
             //输出足够的填补空格
             for (int j = vs[i].length() + 1; j < col_width[i]; j++) {
-                cout << " ";
+                printf(" ");
             }
-            
+
         }
-        cout << "|" << endl;
-        
-        //一行最后画分隔符
-        cout << div_line << endl;
+        printf("|\n");
     }
+    
+    printf("%s\n", div_line.c_str());
 }
 
-
+//测时函数
+double calculate_time(long start, long end)
+{
+    return (double)(end - start)/CLK_TCK;
+}
 
 

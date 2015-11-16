@@ -5,7 +5,7 @@
 //SQL语法树
 struct SQLGrammarTree {
 	int type;
-	char text[48];
+	char text[256];
 	SQLGrammarTree *lpNext; // 指向同一层的节点
 	SQLGrammarTree *lpSub;  // 指向子节点
 };

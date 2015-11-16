@@ -1310,13 +1310,13 @@ yyreduce:
     {
         case 2:
 #line 75 "Analysis.y" /* yacc.c:1646  */
-    {	nm_clear();	}
+    {	yyerror("grammar error."); nm_clear();	}
 #line 1315 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
   case 3:
 #line 76 "Analysis.y" /* yacc.c:1646  */
-    {	nm_clear();	}
+    {	yyerror("grammar error."); nm_clear();	}
 #line 1321 "Analysis.cpp" /* yacc.c:1646  */
     break;
 
@@ -1743,7 +1743,12 @@ void yyerror(const char *s, ...)
 {
     va_list ap;
     va_start(ap, s);
-    fprintf(stderr, "line %d: error near %s: ", yylineno, yytext);
+    if (yyin != stdin) {
+        fprintf(stderr, "line %d: error near '%s': ", yylineno, yytext);
+    }
+    else
+        fprintf(stderr, "error near '%s': ", yytext);
+    
     vfprintf(stderr, s, ap);
     fprintf(stderr, "\n");
     va_end(ap);

@@ -1311,28 +1311,30 @@ case 44:
 YY_RULE_SETUP
 #line 281 "Analysis.l"
 {	
-				if(finished_state)	
-					printf(PROMPT);	
-				else if(yyin == stdin)
-					printf(ENTER_SIGN);
+				if(yyin == stdin) {
+					if(finished_state)	
+						printf(PROMPT);	
+					else
+						printf(ENTER_SIGN);
 				}
+		}
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 288 "Analysis.l"
+#line 291 "Analysis.l"
 {	finished_state = 0;	}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 290 "Analysis.l"
+#line 293 "Analysis.l"
 {  finished_state = 0; yyerror("mystery character '%c'", *yytext);    }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 292 "Analysis.l"
+#line 295 "Analysis.l"
 ECHO;
 	YY_BREAK
-#line 1336 "lex.cpp"
+#line 1338 "lex.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(COMMENT):
 	yyterminate();
@@ -2344,7 +2346,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 292 "Analysis.l"
+#line 295 "Analysis.l"
 
 
 

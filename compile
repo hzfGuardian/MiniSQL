@@ -1,3 +1,0 @@
-#!/bin/zsh
-g++ -o MiniSQL Interpreter/SQLGrammarTree.cpp Interpreter/Lex/*.cpp API/API.cpp CatalogManager/CatalogManager.cpp RecordManager/RecordManager.cpp IndexManager/bplus.cpp IndexManager/IndexManager.cpp BufferManager/BufferManager.cpp MiniSQL.cpp -m32 
-

@@ -10,10 +10,20 @@ void Create_index(string index_name, int attr_type){
 	b=m1.GetBlock(index_name,0,1);
 	memcpy(b->record,&n,4);
 	memcpy(b->record+4,&firstplace,4);	
-	b=m1.GetBlock(index_name,1,1);
+	b=m1.GetBlock(index_name,1,1);///////////////////////////////////yaodxiugai
 	int who=2;
 	memcpy(b->record,&n,4);
 	memcpy(b->record+4,&who,4);	
+	if(n!=2)
+	{
+		int k=12;
+		int num=0x7fffffff;
+		for(int i=0;i<500;i++)
+		{
+			memcpy(b->record+k,&num,4);
+			k=k+8;
+		}
+	}
 }
 
 //CREATE INDEX NAME ON NAME '(' NAME ')'

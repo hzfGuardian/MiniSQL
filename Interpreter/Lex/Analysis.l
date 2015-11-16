@@ -279,11 +279,14 @@ null    {
 `[^`\n]*$               {  finished_state = 0; yyerror("Unterminated name %s", yytext);  }
 
 [\n]			{	
-				if(finished_state)	
-					printf(PROMPT);	
-				else if(yyin == stdin)
-					printf(ENTER_SIGN);
+				if(yyin == stdin) {
+					if(finished_state)	
+						printf(PROMPT);	
+					else
+						printf(ENTER_SIGN);
 				}
+		}
+				
 
 [ \t]                 {	finished_state = 0;	}
 

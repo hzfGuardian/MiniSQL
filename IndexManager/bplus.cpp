@@ -227,12 +227,20 @@ char* getfromnode(node* p)
 			memcpy(re+k,&a,4); k+=4;
 			if(type==0)
 			{
-				int num=atoi((p->getvalue(i)).c_str());
+				int num;
+				if(!(p->getvalue(i)).empty())
+					num=atoi((p->getvalue(i)).c_str());
+				else 
+					num=0x7fffffff;
 				memcpy(re+k,&num,4); k+=4;
 			}
 			else
 			{
-				float num=atof((p->getvalue(i)).c_str());
+				float num;
+				if(!(p->getvalue(i)).empty())
+					num=atof((p->getvalue(i)).c_str());
+				else
+					num=0x7fffffff;	
 				memcpy(re+k,&num,4); k+=4;
 			}
 			
@@ -280,7 +288,10 @@ node* getfromfile(char* re)//0 int, 1 float, 2 char*
 	else
 	{
 		int i,a;
-		char c[4];
+		int t1;
+		float t2;
+		char temp[10];
+		string s;
 		for(i=0;i<500;i++)
 		{
 			memcpy(&a,re+k,4); k+=4;
@@ -288,9 +299,36 @@ node* getfromfile(char* re)//0 int, 1 float, 2 char*
 				p->setadree(a,i);
 			else
 				p->setOffset(a,i);
-			memcpy(c,re+k,4); k+=4;
-			string s(c);
-			p->setvalue(s,i);
+			if(type==0)
+			{
+				memcpy(&t1,re+k,4); k+=4;
+				if(t1!=0x7fffffff)	
+				{
+					sprintf(temp,"%d",t1);
+					s=temp;
+					p->setvalue(s,i);
+				}
+				else
+				{
+					s="";
+					p->setvalue(s,i);
+				}	
+			}	
+			else
+			{
+				memcpy(&t2,re+k,4); k+=4;
+				if(t2!=0x7fffffff)
+				{
+					sprintf(temp,"%f",t2);
+					s=temp;
+					p->setvalue(s,i);
+				}
+				else
+				{
+					s="";
+					p->setvalue(s,i);
+				}
+			}
 		}
 		memcpy(&a,re+k,4); k+=4;
 		if(who==1)
@@ -602,9 +640,19 @@ int insertpar(string k,int newp,int old,int root,string filename)
 		//node *newroot=new normalnode;
 		int who=1;
 		int newr=Block_num(filename);
-		Block* b=m1.GetBlock(filename,newr,1);
+		Block* b=m1.GetBlock(filename,newr,1);////////////////////////////////////////////////////////////////////////
 		memcpy(b->record,&type,4);
-		memcpy(b->record+4,&who,4);	
+		memcpy(b->record+4,&who,4);
+		if(N==501)
+		{
+			int kk=12;
+			int numm=0x7fffffff;
+			for(int ii=0;ii<500;ii++)
+			{
+				memcpy(b->record+kk,&numm,4);
+				kk=kk+8;
+			}
+		}
 		node *newroot=getnode(newr,filename);
 		newroot->setadree(old,0);
 		newroot->setvalue(k,0); 
@@ -650,9 +698,19 @@ int insertpar(string k,int newp,int old,int root,string filename)
 			//node* second=new normalnode;
 			int who=1;
 			int sec=Block_num(filename);
-			Block* b=m1.GetBlock(filename,sec,1);
+			Block* b=m1.GetBlock(filename,sec,1);/////////////////////////////////////////////////////////////////////
 			memcpy(b->record,&type,4);
 			memcpy(b->record+4,&who,4);	
+			if(N==501)
+			{
+				int kk=12;
+				int numm=0x7fffffff;
+				for(int ii=0;ii<500;ii++)
+				{
+					memcpy(b->record+kk,&numm,4);
+					kk=kk+8;
+				}
+			}
 			node *second=getnode(sec,filename);
 			
 			int m=0,q=0;
@@ -774,9 +832,19 @@ int insert(string k,int off,int place,string filename){
 			//node *newtree=new leafnode;
 			int who=2;
 			int newp=Block_num(filename);
-			Block* b=m1.GetBlock(filename,newp,1);
+			Block* b=m1.GetBlock(filename,newp,1);//////////////////////////////////////////////////////////////////////
 			memcpy(b->record,&type,4);
-			memcpy(b->record+4,&who,4);	
+			memcpy(b->record+4,&who,4);
+			if(N==501)
+			{
+				int kk=12;
+				int numm=0x7fffffff;
+				for(int ii=0;ii<500;ii++)
+				{
+					memcpy(b->record+kk,&numm,4);
+					kk=kk+8;
+				}
+			}	
 			node *newtree=getnode(newp,filename);
 			node* temp=new tempnode(type,p);
 			insertleafnode(k,off,temp);

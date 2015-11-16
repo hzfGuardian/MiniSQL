@@ -35,7 +35,9 @@ class MBuffer{
 	 	bool Sche2(string tablename, int offset);
 	 	bool Drop(string tablename);
 	 	bool Exchange(string tablename, int offset, Block* Repalced);
-		void test(); 
+    
+        void clearBuffer();
+    
 	 	~MBuffer();
 };
 int Block_num (string file_name);

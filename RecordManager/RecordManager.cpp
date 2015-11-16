@@ -88,7 +88,7 @@ int Insert(Tuple &tuple)
                 for(offtest = 0;offtest<=offset;offtest++)
                 {
                     Target = mybuffer.GetBlock(file_name,offtest,0);
-                    for(dp=0;dp<BlockSize;dp+=tuple.length()+1)
+                    for(dp=0;dp<BlockSize-tuple.length()-1;dp+=tuple.length()+1)
                     {
                         memcpy(target,Target->record+dp+tuple.length(),1);
                         if(*target=='1')
@@ -207,7 +207,7 @@ bool Delete_tuple(vector<int> offsetlist, Table table, Condition_list list)
             if(offset>=Block_num(file_name))
                 break;
             Target = mybuffer.GetBlock(file_name,offset,0);
-            for(dp=0;dp<BlockSize;dp+=(table.length()+1))
+            for(dp=0;dp<BlockSize-table.length()-1;dp+=(table.length()+1))
             {
                 memcpy(target,Target->record+dp+table.length(),1);
                 if(*target == '1')
@@ -440,7 +440,7 @@ bool Select_tuple(vector<int> offsetlist, Table table, Condition_list list)
             if(offset>=Block_num(file_name))
                 break;
             Target = mybuffer.GetBlock(file_name,offset,0);
-            for(dp=0;dp<BlockSize;dp+=(table.length()+1))
+            for(dp=0;dp<BlockSize-table.length()-1;dp+=(table.length()+1))
             {
                 memcpy(target,Target->record+dp+table.length(),1);
                 if(*target == '1')
